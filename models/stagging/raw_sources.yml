@@ -1,0 +1,847 @@
+version: 2
+
+sources:
+  - name: raw_data
+    description: ""
+    tables:
+      - name: agent_stats_table_bangkok
+        description: ""
+        columns:
+          - name: agent_id
+            data_type: number
+            description: ""
+          - name: event_id
+            data_type: varchar
+            description: ""
+          - name: total_utilization
+            data_type: float
+            description: ""
+
+      - name: agent_stats_table_paris
+        description: ""
+        columns:
+          - name: agent_id
+            data_type: number
+            description: ""
+          - name: event_id
+            data_type: varchar
+            description: ""
+          - name: total_utilization
+            data_type: float
+            description: ""
+
+      - name: agent_stats_table_toronto
+        description: ""
+        columns:
+          - name: agent_id
+            data_type: number
+            description: ""
+          - name: event_id
+            data_type: varchar
+            description: ""
+          - name: total_utilization
+            data_type: float
+            description: ""
+
+      - name: agents
+        description: ""
+        columns:
+          - name: agent_id
+            data_type: number
+            description: ""
+          - name: agent_name
+            data_type: varchar
+            description: ""
+
+      - name: detailed_matches_maps_bangkok
+        description: ""
+        columns:
+          - name: map_match_id
+            data_type: number
+            description: ""
+          - name: match_id
+            data_type: number
+            description: ""
+          - name: map_id
+            data_type: number
+            description: ""
+          - name: map_order
+            data_type: number
+            description: ""
+          - name: score
+            data_type: varchar
+            description: ""
+          - name: winner_id
+            data_type: number
+            description: ""
+          - name: duration
+            data_type: number
+            description: ""
+          - name: picked_by
+            data_type: number
+            description: ""
+
+      - name: detailed_matches_maps_paris
+        description: ""
+        columns:
+          - name: map_match_id
+            data_type: number
+            description: ""
+          - name: match_id
+            data_type: number
+            description: ""
+          - name: map_id
+            data_type: number
+            description: ""
+          - name: map_order
+            data_type: number
+            description: ""
+          - name: score
+            data_type: varchar
+            description: ""
+          - name: winner_id
+            data_type: number
+            description: ""
+          - name: duration
+            data_type: number
+            description: ""
+          - name: picked_by
+            data_type: number
+            description: ""
+
+      - name: detailed_matches_maps_toronto
+        description: ""
+        columns:
+          - name: map_match_id
+            data_type: number
+            description: ""
+          - name: match_id
+            data_type: number
+            description: ""
+          - name: map_id
+            data_type: number
+            description: ""
+          - name: map_order
+            data_type: number
+            description: ""
+          - name: score
+            data_type: varchar
+            description: ""
+          - name: winner_id
+            data_type: number
+            description: ""
+          - name: duration
+            data_type: number
+            description: ""
+          - name: picked_by
+            data_type: number
+            description: ""
+
+      - name: detailed_matches_player_stats_bangkok
+        description: ""
+        columns:
+          - name: match_id
+            data_type: number
+            description: ""
+          - name: player_id
+            data_type: number
+            description: ""
+          - name: team_id
+            data_type: number
+            description: ""
+          - name: map_id
+            data_type: number
+            description: ""
+          - name: agent_id
+            data_type: number
+            description: ""
+          - name: rating
+            data_type: float
+            description: ""
+          - name: acs
+            data_type: number
+            description: ""
+          - name: k
+            data_type: number
+            description: ""
+          - name: d
+            data_type: number
+            description: ""
+          - name: a
+            data_type: number
+            description: ""
+          - name: kd_diff
+            data_type: number
+            description: ""
+          - name: kast
+            data_type: float
+            description: ""
+          - name: adr
+            data_type: number
+            description: ""
+          - name: hs_percent
+            data_type: float
+            description: ""
+          - name: fk
+            data_type: number
+            description: ""
+          - name: fd
+            data_type: number
+            description: ""
+          - name: fk_fd_diff
+            data_type: number
+            description: ""
+
+      - name: detailed_matches_player_stats_paris
+        description: ""
+        columns:
+          - name: match_id
+            data_type: number
+            description: ""
+          - name: player_id
+            data_type: number
+            description: ""
+          - name: team_id
+            data_type: number
+            description: ""
+          - name: map_id
+            data_type: number
+            description: ""
+          - name: agent_id
+            data_type: number
+            description: ""
+          - name: rating
+            data_type: float
+            description: ""
+          - name: acs
+            data_type: number
+            description: ""
+          - name: k
+            data_type: number
+            description: ""
+          - name: d
+            data_type: number
+            description: ""
+          - name: a
+            data_type: number
+            description: ""
+          - name: kd_diff
+            data_type: number
+            description: ""
+          - name: kast
+            data_type: float
+            description: ""
+          - name: adr
+            data_type: number
+            description: ""
+          - name: hs_percent
+            data_type: float
+            description: ""
+          - name: fk
+            data_type: number
+            description: ""
+          - name: fd
+            data_type: number
+            description: ""
+          - name: fk_fd_diff
+            data_type: number
+            description: ""
+
+      - name: detailed_matches_player_stats_toronto
+        description: ""
+        columns:
+          - name: match_id
+            data_type: number
+            description: ""
+          - name: player_id
+            data_type: number
+            description: ""
+          - name: team_id
+            data_type: number
+            description: ""
+          - name: map_id
+            data_type: number
+            description: ""
+          - name: agent_id
+            data_type: number
+            description: ""
+          - name: rating
+            data_type: float
+            description: ""
+          - name: acs
+            data_type: number
+            description: ""
+          - name: k
+            data_type: number
+            description: ""
+          - name: d
+            data_type: number
+            description: ""
+          - name: a
+            data_type: number
+            description: ""
+          - name: kd_diff
+            data_type: number
+            description: ""
+          - name: kast
+            data_type: float
+            description: ""
+          - name: adr
+            data_type: number
+            description: ""
+          - name: hs_percent
+            data_type: float
+            description: ""
+          - name: fk
+            data_type: number
+            description: ""
+          - name: fd
+            data_type: number
+            description: ""
+          - name: fk_fd_diff
+            data_type: number
+            description: ""
+
+      - name: event_info
+        description: ""
+        columns:
+          - name: event_id
+            data_type: varchar
+            description: ""
+          - name: event_name
+            data_type: varchar
+            description: ""
+          - name: url
+            data_type: varchar
+            description: ""
+          - name: title
+            data_type: varchar
+            description: ""
+          - name: subtitle
+            data_type: varchar
+            description: ""
+          - name: start_date
+            data_type: date
+            description: ""
+          - name: end_date
+            data_type: date
+            description: ""
+          - name: prize_pool
+            data_type: float
+            description: ""
+          - name: location
+            data_type: varchar
+            description: ""
+
+      - name: map_stats_bangkok
+        description: ""
+        columns:
+          - name: map_id
+            data_type: number
+            description: ""
+          - name: times_played
+            data_type: number
+            description: ""
+          - name: attack_win_percent
+            data_type: float
+            description: ""
+          - name: defense_win_percent
+            data_type: float
+            description: ""
+
+      - name: map_stats_paris
+        description: ""
+        columns:
+          - name: map_id
+            data_type: number
+            description: ""
+          - name: times_played
+            data_type: number
+            description: ""
+          - name: attack_win_percent
+            data_type: float
+            description: ""
+          - name: defense_win_percent
+            data_type: float
+            description: ""
+
+      - name: map_stats_toronto
+        description: ""
+        columns:
+          - name: map_id
+            data_type: number
+            description: ""
+          - name: times_played
+            data_type: number
+            description: ""
+          - name: attack_win_percent
+            data_type: float
+            description: ""
+          - name: defense_win_percent
+            data_type: float
+            description: ""
+
+      - name: maps_bangkok
+        description: ""
+        columns:
+          - name: map_id
+            data_type: number
+            description: ""
+          - name: map_name
+            data_type: varchar
+            description: ""
+          - name: last_rework
+            data_type: varchar
+            description: ""
+
+      - name: maps_paris
+        description: ""
+        columns:
+          - name: map_id
+            data_type: number
+            description: ""
+          - name: map_name
+            data_type: varchar
+            description: ""
+          - name: last_rework
+            data_type: varchar
+            description: ""
+
+      - name: maps_toronto
+        description: ""
+        columns:
+          - name: map_id
+            data_type: number
+            description: ""
+          - name: map_name
+            data_type: varchar
+            description: ""
+          - name: last_rework
+            data_type: varchar
+            description: ""
+
+      - name: matches_bangkok
+        description: ""
+        columns:
+          - name: match_id
+            data_type: number
+            description: ""
+          - name: event_id
+            data_type: varchar
+            description: ""
+          - name: match_title
+            data_type: varchar
+            description: ""
+          - name: match_date
+            data_type: date
+            description: ""
+          - name: stage
+            data_type: varchar
+            description: ""
+          - name: format
+            data_type: varchar
+            description: ""
+          - name: team1_id
+            data_type: number
+            description: ""
+          - name: team2_id
+            data_type: number
+            description: ""
+          - name: score_overall
+            data_type: varchar
+            description: ""
+          - name: maps_played
+            data_type: number
+            description: ""
+          - name: patch
+            data_type: varchar
+            description: ""
+
+      - name: matches_paris
+        description: ""
+        columns:
+          - name: match_id
+            data_type: number
+            description: ""
+          - name: event_id
+            data_type: varchar
+            description: ""
+          - name: match_title
+            data_type: varchar
+            description: ""
+          - name: match_date
+            data_type: date
+            description: ""
+          - name: stage
+            data_type: varchar
+            description: ""
+          - name: format
+            data_type: varchar
+            description: ""
+          - name: team1_id
+            data_type: number
+            description: ""
+          - name: team2_id
+            data_type: number
+            description: ""
+          - name: score_overall
+            data_type: varchar
+            description: ""
+          - name: maps_played
+            data_type: number
+            description: ""
+          - name: patch
+            data_type: varchar
+            description: ""
+
+      - name: matches_toronto
+        description: ""
+        columns:
+          - name: match_id
+            data_type: number
+            description: ""
+          - name: event_id
+            data_type: varchar
+            description: ""
+          - name: match_title
+            data_type: varchar
+            description: ""
+          - name: match_date
+            data_type: date
+            description: ""
+          - name: stage
+            data_type: varchar
+            description: ""
+          - name: format
+            data_type: varchar
+            description: ""
+          - name: team1_id
+            data_type: number
+            description: ""
+          - name: team2_id
+            data_type: number
+            description: ""
+          - name: score_overall
+            data_type: varchar
+            description: ""
+          - name: maps_played
+            data_type: number
+            description: ""
+          - name: patch
+            data_type: varchar
+            description: ""
+
+      - name: player_stats_bangkok
+        description: ""
+        columns:
+          - name: player_id
+            data_type: number
+            description: ""
+          - name: team_id
+            data_type: number
+            description: ""
+          - name: event_id
+            data_type: varchar
+            description: ""
+          - name: agents_count
+            data_type: number
+            description: ""
+          - name: rounds
+            data_type: number
+            description: ""
+          - name: rating
+            data_type: float
+            description: ""
+          - name: acs
+            data_type: float
+            description: ""
+          - name: kd_ratio
+            data_type: float
+            description: ""
+          - name: kast
+            data_type: float
+            description: ""
+          - name: adr
+            data_type: float
+            description: ""
+          - name: kpr
+            data_type: float
+            description: ""
+          - name: apr
+            data_type: float
+            description: ""
+          - name: fkpr
+            data_type: float
+            description: ""
+          - name: fdpr
+            data_type: float
+            description: ""
+          - name: hs_percent
+            data_type: float
+            description: ""
+          - name: cl_percent
+            data_type: float
+            description: ""
+          - name: clutches
+            data_type: number
+            description: ""
+          - name: k_max
+            data_type: number
+            description: ""
+          - name: kills
+            data_type: number
+            description: ""
+          - name: deaths
+            data_type: number
+            description: ""
+          - name: assists
+            data_type: number
+            description: ""
+          - name: first_kills
+            data_type: number
+            description: ""
+          - name: first_deaths
+            data_type: number
+            description: ""
+
+      - name: player_stats_paris
+        description: ""
+        columns:
+          - name: player_id
+            data_type: number
+            description: ""
+          - name: team_id
+            data_type: number
+            description: ""
+          - name: event_id
+            data_type: varchar
+            description: ""
+          - name: agents_count
+            data_type: number
+            description: ""
+          - name: rounds
+            data_type: number
+            description: ""
+          - name: rating
+            data_type: float
+            description: ""
+          - name: acs
+            data_type: float
+            description: ""
+          - name: kd_ratio
+            data_type: float
+            description: ""
+          - name: kast
+            data_type: float
+            description: ""
+          - name: adr
+            data_type: float
+            description: ""
+          - name: kpr
+            data_type: float
+            description: ""
+          - name: apr
+            data_type: float
+            description: ""
+          - name: fkpr
+            data_type: float
+            description: ""
+          - name: fdpr
+            data_type: float
+            description: ""
+          - name: hs_percent
+            data_type: float
+            description: ""
+          - name: cl_percent
+            data_type: float
+            description: ""
+          - name: clutches
+            data_type: number
+            description: ""
+          - name: k_max
+            data_type: number
+            description: ""
+          - name: kills
+            data_type: number
+            description: ""
+          - name: deaths
+            data_type: number
+            description: ""
+          - name: assists
+            data_type: number
+            description: ""
+          - name: first_kills
+            data_type: number
+            description: ""
+          - name: first_deaths
+            data_type: number
+            description: ""
+
+      - name: player_stats_toronto
+        description: ""
+        columns:
+          - name: player_id
+            data_type: number
+            description: ""
+          - name: team_id
+            data_type: number
+            description: ""
+          - name: event_id
+            data_type: varchar
+            description: ""
+          - name: agents_count
+            data_type: number
+            description: ""
+          - name: rounds
+            data_type: number
+            description: ""
+          - name: rating
+            data_type: float
+            description: ""
+          - name: acs
+            data_type: float
+            description: ""
+          - name: kd_ratio
+            data_type: float
+            description: ""
+          - name: kast
+            data_type: float
+            description: ""
+          - name: adr
+            data_type: float
+            description: ""
+          - name: kpr
+            data_type: float
+            description: ""
+          - name: apr
+            data_type: float
+            description: ""
+          - name: fkpr
+            data_type: float
+            description: ""
+          - name: fdpr
+            data_type: float
+            description: ""
+          - name: hs_percent
+            data_type: float
+            description: ""
+          - name: cl_percent
+            data_type: float
+            description: ""
+          - name: clutches
+            data_type: number
+            description: ""
+          - name: k_max
+            data_type: number
+            description: ""
+          - name: kills
+            data_type: number
+            description: ""
+          - name: deaths
+            data_type: number
+            description: ""
+          - name: assists
+            data_type: number
+            description: ""
+          - name: first_kills
+            data_type: number
+            description: ""
+          - name: first_deaths
+            data_type: number
+            description: ""
+
+      - name: players_bangkok
+        description: ""
+        columns:
+          - name: player_id
+            data_type: number
+            description: ""
+          - name: player_name
+            data_type: varchar
+            description: ""
+          - name: team_id
+            data_type: number
+            description: ""
+          - name: start_date
+            data_type: date
+            description: ""
+          - name: end_date
+            data_type: date
+            description: ""
+
+      - name: players_paris
+        description: ""
+        columns:
+          - name: player_id
+            data_type: number
+            description: ""
+          - name: player_name
+            data_type: varchar
+            description: ""
+          - name: team_id
+            data_type: number
+            description: ""
+          - name: start_date
+            data_type: date
+            description: ""
+          - name: end_date
+            data_type: date
+            description: ""
+
+      - name: players_toronto
+        description: ""
+        columns:
+          - name: player_id
+            data_type: number
+            description: ""
+          - name: player_name
+            data_type: varchar
+            description: ""
+          - name: team_id
+            data_type: number
+            description: ""
+          - name: start_date
+            data_type: date
+            description: ""
+          - name: end_date
+            data_type: date
+            description: ""
+
+      - name: teams_bangkok
+        description: ""
+        columns:
+          - name: team_id
+            data_type: number
+            description: ""
+          - name: team_name
+            data_type: varchar
+            description: ""
+          - name: roster_made
+            data_type: varchar
+            description: ""
+
+      - name: teams_paris
+        description: ""
+        columns:
+          - name: team_id
+            data_type: number
+            description: ""
+          - name: team_name
+            data_type: varchar
+            description: ""
+          - name: roster_made
+            data_type: varchar
+            description: ""
+
+      - name: teams_toronto
+        description: ""
+        columns:
+          - name: team_id
+            data_type: number
+            description: ""
+          - name: team_name
+            data_type: varchar
+            description: ""
+          - name: roster_made
+            data_type: varchar
+            description: ""
