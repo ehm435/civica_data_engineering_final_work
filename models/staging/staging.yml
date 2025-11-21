@@ -417,3 +417,215 @@ models:
       - dbt_utils.unique_combination_of_columns:
           arguments:
             combination_of_columns: ["event_id", "match_title"]
+
+  - name: base_map_stats_bangkok_2025
+    description: "Clean base model for map_stats_bangkok. Adds a fixed event_id and standardized typing."
+    config:
+      tags: ["base", "map_stats", "bangkok"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_bangkok_2025"]
+      - name: map_id
+        description: "Map identifier inside the event"
+        tests:
+          - not_null
+      - name: times_played
+        description: "How many times the map was played"
+        tests:
+          - not_null
+      - name: attack_win_percent
+        description: "Percent of attack-sided wins"
+      - name: defense_win_percent
+        description: "Percent of defense-sided wins"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "map_id"]
+
+  - name: base_map_stats_paris_2025
+    description: "Clean base model for map_stats_paris. Adds a fixed event_id and standardized typing."
+    config:
+      tags: ["base", "map_stats", "paris"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_paris_2025"]
+      - name: map_id
+        description: "Map identifier inside the event"
+        tests:
+          - not_null
+      - name: times_played
+        description: "How many times the map was played"
+        tests:
+          - not_null
+      - name: attack_win_percent
+        description: "Percent of attack-sided wins"
+      - name: defense_win_percent
+        description: "Percent of defense-sided wins"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "map_id"]
+
+  - name: base_map_stats_toronto_2025
+    description: "Clean base model for map_stats_toronto. Adds a fixed event_id and standardized typing."
+    config:
+      tags: ["base", "map_stats", "toronto"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_toronto_2025"]
+      - name: map_id
+        description: "Map identifier inside the event"
+        tests:
+          - not_null
+      - name: times_played
+        description: "How many times the map was played"
+        tests:
+          - not_null
+      - name: attack_win_percent
+        description: "Percent of attack-sided wins"
+      - name: defense_win_percent
+        description: "Percent of defense-sided wins"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "map_id"]
+
+  - name: stg_map_stats
+    description: >
+      Union of all tournament-level map stat tables.  
+      Provides a standardized set of map performance metrics per map per event.
+    config:
+      tags: ["staging", "bridge", "map_stats"]
+    columns:
+      - name: event_id
+        description: "Tournament event ID"
+        tests:
+          - not_null
+      - name: map_id
+        description: "Map identifier inside the event"
+        tests:
+          - not_null
+      - name: times_played
+        description: "How many times the map was played"
+      - name: attack_win_percent
+        description: "Percent of attack-sided victories"
+      - name: defense_win_percent
+        description: "Percent of defense-sided victories"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "map_id"]
+
+  - name: base_agents_stats_bangkok_2025
+    description: "Clean base model for agent_stats_bangkok. Adds minimal typing and event ID validation."
+    config:
+      tags: ["base", "agent_stats", "bangkok"]
+    columns:
+      - name: agent_id
+        description: "Agent identifier local to the stats table"
+        tests:
+          - not_null
+      - name: event_id
+        description: "Logical identifier for the event"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_bangkok_2025"]
+      - name: utilization_percent
+        description: "Agent utilization percentage across all matches"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "agent_id"]
+
+  - name: base_agents_stats_paris_2025
+    description: "Clean base model for agent_stats_paris. Adds minimal typing and event ID validation."
+    config:
+      tags: ["base", "agent_stats", "paris"]
+    columns:
+      - name: agent_id
+        description: "Agent identifier local to the stats table"
+        tests:
+          - not_null
+      - name: event_id
+        description: "Logical identifier for the event"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_paris_2025"]
+      - name: utilization_percent
+        description: "Agent utilization percentage across all matches"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "agent_id"]
+
+  - name: base_agents_stats_toronto_2025
+    description: "Clean base model for agent_stats_toronto. Adds minimal typing and event ID validation."
+    config:
+      tags: ["base", "agent_stats", "toronto"]
+    columns:
+      - name: agent_id
+        description: "Agent identifier local to the stats table"
+        tests:
+          - not_null
+      - name: event_id
+        description: "Logical identifier for the event"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_toronto_2025"]
+      - name: utilization_percent
+        description: "Agent utilization percentage across all matches"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "agent_id"]
+
+  - name: stg_agent_stats
+    description: >
+      Union of all agent stats across tournaments.  
+      Provides normalized agent usage percentages with standard field names.
+    config:
+      tags: ["staging", "agent_stats", "bridge"]
+    columns:
+      - name: agent_id
+        description: "Agent ID (local numeric identifier)"
+        tests:
+          - not_null
+      - name: event_id
+        description: "Tournament identifier"
+        tests:
+          - not_null
+      - name: utilization_percent
+        description: "Final agent usage percentage"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "agent_id"]
