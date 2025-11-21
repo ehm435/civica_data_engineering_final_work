@@ -1,0 +1,122 @@
+version: 2
+
+models:
+
+  - name: base_maps_bangkok_2025
+    description: "Clean base model for maps_bangkok. Adds a fixed event_id and applies minimal column cleaning."
+    config:
+      tags: ["base", "maps", "bangkok"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event (e.g., masters_bangkok_2025)"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_bangkok_2025"]
+      - name: map_id
+        description: "Map identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: map_name
+        description: "Name of the map as provided in the raw data"
+        tests:
+          - not_null
+      - name: last_rework
+        description: "Timestamp or text indicating when the map was last reworked"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "map_id"]
+
+
+  - name: base_maps_paris_2025
+    description: "Clean base model for maps_paris. Adds a fixed event_id and applies minimal column cleaning."
+    config:
+      tags: ["base", "maps", "paris"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_paris_2025"]
+      - name: map_id
+        description: "Map identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: map_name
+        description: "Name of the map as provided in the raw data"
+        tests:
+          - not_null
+      - name: last_rework
+        description: "Timestamp or text indicating when the map was last reworked"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "map_id"]
+
+
+  - name: base_maps_toronto_2025
+    description: "Clean base model for maps_toronto. Adds a fixed event_id and applies minimal column cleaning."
+    config:
+      tags: ["base", "maps", "toronto"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_toronto_2025"]
+      - name: map_id
+        description: "Map identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: map_name
+        description: "Name of the map as provided in the raw data"
+        tests:
+          - not_null
+      - name: last_rework
+        description: "Timestamp or text indicating when the map was last reworked"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "map_id"]
+
+  - name: stg_maps
+    description: >
+      Bridge table that maps each (event_id, map_id) pair — which uniquely
+      identifies a map inside a single tournament — to a global surrogate key (map_sk)
+      computed from the normalized map name.  
+      This enables analysis across tournaments using a single global map identifier.
+    config:
+      tags: ["staging", "bridge", "maps"]
+    columns:
+      - name: map_sk
+        description: "Global surrogate key for the map, identical for the same map across all tournaments"
+        tests:
+          - not_null
+      - name: event_id
+        description: "Event to which this map_id belongs"
+        tests:
+          - not_null
+      - name: map_id
+        description: "Map identifier inside the event (local key)"
+        tests:
+          - not_null
+      - name: map_name
+        description: "Raw map name used to compute the normalized identifier"
+        tests:
+          - not_null
+      - name: last_rework
+        description: "Last known map rework information"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "map_id"]
