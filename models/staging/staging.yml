@@ -967,3 +967,469 @@ models:
       - dbt_utils.unique_combination_of_columns:
           arguments:
             combination_of_columns: ["event_id", "match_id", "map_id", "map_order"]
+
+  - name: base_detailed_matches_player_stats_bangkok_2025
+    description: "Clean base model for detailed_matches_player_stats_bangkok. Adds a fixed event_id and standardized typing."
+    config:
+      tags: ["base", "detailed_matches_player_stats", "bangkok"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event (e.g., masters_bangkok_2025)"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_bangkok_2025"]
+      - name: match_id
+        description: "Match identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: player_id
+        description: "Player identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: map_id
+        description: "Map identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: rating
+        description: "Player rating for this map"
+      - name: acs
+        description: "Average combat score"
+      - name: k
+        description: "Total kills in this map"
+      - name: d
+        description: "Total deaths in this map"
+      - name: a
+        description: "Total assists in this map"
+      - name: kd_diff
+        description: "Kill–death difference (K - D)"
+      - name: kast
+        description: "KAST percentage for the player in this map"
+      - name: adr
+        description: "Average damage per round"
+      - name: hs_percent
+        description: "Headshot percentage"
+      - name: fk
+        description: "First kills"
+      - name: fd
+        description: "First deaths"
+      - name: fk_fd_diff
+        description: "Difference between first kills and first deaths"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "match_id", "player_id", "map_id", "agent_id"]
+
+  - name: base_detailed_matches_player_stats_paris_2025
+    description: "Clean base model for detailed_matches_player_stats_paris. Adds a fixed event_id and standardized typing."
+    config:
+      tags: ["base", "detailed_matches_player_stats", "paris"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event (e.g., masters_paris_2025)"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_paris_2025"]
+      - name: match_id
+        description: "Match identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: player_id
+        description: "Player identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: map_id
+        description: "Map identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: rating
+        description: "Player rating for this map"
+      - name: acs
+        description: "Average combat score"
+      - name: k
+        description: "Total kills in this map"
+      - name: d
+        description: "Total deaths in this map"
+      - name: a
+        description: "Total assists in this map"
+      - name: kd_diff
+        description: "Kill–death difference (K - D)"
+      - name: kast
+        description: "KAST percentage for the player in this map"
+      - name: adr
+        description: "Average damage per round"
+      - name: hs_percent
+        description: "Headshot percentage"
+      - name: fk
+        description: "First kills"
+      - name: fd
+        description: "First deaths"
+      - name: fk_fd_diff
+        description: "Difference between first kills and first deaths"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "match_id", "player_id", "map_id", "agent_id"]
+
+  - name: base_detailed_matches_player_stats_toronto_2025
+    description: "Clean base model for detailed_matches_player_stats_toronto. Adds a fixed event_id and standardized typing."
+    config:
+      tags: ["base", "detailed_matches_player_stats", "toronto"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event (e.g., masters_toronto_2025)"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_toronto_2025"]
+      - name: match_id
+        description: "Match identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: player_id
+        description: "Player identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: map_id
+        description: "Map identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: rating
+        description: "Player rating for this map"
+      - name: acs
+        description: "Average combat score"
+      - name: k
+        description: "Total kills in this map"
+      - name: d
+        description: "Total deaths in this map"
+      - name: a
+        description: "Total assists in this map"
+      - name: kd_diff
+        description: "Kill–death difference (K - D)"
+      - name: kast
+        description: "KAST percentage for the player in this map"
+      - name: adr
+        description: "Average damage per round"
+      - name: hs_percent
+        description: "Headshot percentage"
+      - name: fk
+        description: "First kills"
+      - name: fd
+        description: "First deaths"
+      - name: fk_fd_diff
+        description: "Difference between first kills and first deaths"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "match_id", "player_id", "map_id", "agent_id"]
+
+  - name: stg_detailed_matches_player_stats
+    description: >
+      Union of all detailed match-level player stat tables across tournaments.
+      Each row represents the stats of a player on a given agent in a specific map of a match.
+    config:
+      tags: ["staging", "bridge", "detailed_matches_player_stats"]
+    columns:
+      - name: event_id
+        description: "Tournament event ID"
+        tests:
+          - not_null
+      - name: match_id
+        description: "Match ID local to the event"
+        tests:
+          - not_null
+      - name: player_id
+        description: "Player ID local to the event"
+        tests:
+          - not_null
+      - name: map_id
+        description: "Map ID local to the event"
+        tests:
+          - not_null
+      - name: rating
+        description: "Player rating for this map"
+      - name: acs
+        description: "Average combat score"
+      - name: k
+        description: "Total kills in this map"
+      - name: d
+        description: "Total deaths in this map"
+      - name: a
+        description: "Total assists in this map"
+      - name: kd_diff
+        description: "Kill–death difference (K - D)"
+      - name: kast
+        description: "KAST percentage for the player in this map"
+      - name: adr
+        description: "Average damage per round"
+      - name: hs_percent
+        description: "Headshot percentage"
+      - name: fk
+        description: "First kills"
+      - name: fd
+        description: "First deaths"
+      - name: fk_fd_diff
+        description: "Difference between first kills and first deaths"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "match_id", "player_id", "map_id", "agent_id"]
+
+  - name: base_player_stats_bangkok_2025
+    description: "Clean base model for player_stats_bangkok. Adds a fixed event_id and standardized typing."
+    config:
+      tags: ["base", "player_stats", "bangkok"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event (e.g., masters_bangkok_2025)"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_bangkok_2025"]
+      - name: player_id
+        description: "Player identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: agents_count
+        description: "Number of different agents used by the player in the event"
+      - name: rounds
+        description: "Total rounds played by the player in the event"
+      - name: rating
+        description: "Overall player rating for the event"
+      - name: acs
+        description: "Average combat score across the event"
+      - name: kd_ratio
+        description: "Kill/death ratio"
+      - name: kast
+        description: "KAST percentage in the event"
+      - name: adr
+        description: "Average damage per round in the event"
+      - name: kpr
+        description: "Kills per round"
+      - name: apr
+        description: "Assists per round"
+      - name: fkpr
+        description: "First kills per round"
+      - name: fdpr
+        description: "First deaths per round"
+      - name: hs_percent
+        description: "Headshot percentage in the event"
+      - name: cl_percent
+        description: "Clutch success percentage"
+      - name: clutches
+        description: "Total number of clutches won"
+      - name: k_max
+        description: "Maximum kills in a single map"
+      - name: kills
+        description: "Total kills in the event"
+      - name: deaths
+        description: "Total deaths in the event"
+      - name: assists
+        description: "Total assists in the event"
+      - name: first_kills
+        description: "Total first kills in the event"
+      - name: first_deaths
+        description: "Total first deaths in the event"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "player_id"]
+
+  - name: base_player_stats_paris_2025
+    description: "Clean base model for player_stats_paris. Adds a fixed event_id and standardized typing."
+    config:
+      tags: ["base", "player_stats", "paris"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event (e.g., masters_paris_2025)"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_paris_2025"]
+      - name: player_id
+        description: "Player identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: agents_count
+        description: "Number of different agents used by the player in the event"
+      - name: rounds
+        description: "Total rounds played by the player in the event"
+      - name: rating
+        description: "Overall player rating for the event"
+      - name: acs
+        description: "Average combat score across the event"
+      - name: kd_ratio
+        description: "Kill/death ratio"
+      - name: kast
+        description: "KAST percentage in the event"
+      - name: adr
+        description: "Average damage per round in the event"
+      - name: kpr
+        description: "Kills per round"
+      - name: apr
+        description: "Assists per round"
+      - name: fkpr
+        description: "First kills per round"
+      - name: fdpr
+        description: "First deaths per round"
+      - name: hs_percent
+        description: "Headshot percentage in the event"
+      - name: cl_percent
+        description: "Clutch success percentage"
+      - name: clutches
+        description: "Total number of clutches won"
+      - name: k_max
+        description: "Maximum kills in a single map"
+      - name: kills
+        description: "Total kills in the event"
+      - name: deaths
+        description: "Total deaths in the event"
+      - name: assists
+        description: "Total assists in the event"
+      - name: first_kills
+        description: "Total first kills in the event"
+      - name: first_deaths
+        description: "Total first deaths in the event"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "player_id"]
+
+  - name: base_player_stats_toronto_2025
+    description: "Clean base model for player_stats_toronto. Adds a fixed event_id and standardized typing."
+    config:
+      tags: ["base", "player_stats", "toronto"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event (e.g., masters_toronto_2025)"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_toronto_2025"]
+      - name: player_id
+        description: "Player identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: agents_count
+        description: "Number of different agents used by the player in the event"
+      - name: rounds
+        description: "Total rounds played by the player in the event"
+      - name: rating
+        description: "Overall player rating for the event"
+      - name: acs
+        description: "Average combat score across the event"
+      - name: kd_ratio
+        description: "Kill/death ratio"
+      - name: kast
+        description: "KAST percentage in the event"
+      - name: adr
+        description: "Average damage per round in the event"
+      - name: kpr
+        description: "Kills per round"
+      - name: apr
+        description: "Assists per round"
+      - name: fkpr
+        description: "First kills per round"
+      - name: fdpr
+        description: "First deaths per round"
+      - name: hs_percent
+        description: "Headshot percentage in the event"
+      - name: cl_percent
+        description: "Clutch success percentage"
+      - name: clutches
+        description: "Total number of clutches won"
+      - name: k_max
+        description: "Maximum kills in a single map"
+      - name: kills
+        description: "Total kills in the event"
+      - name: deaths
+        description: "Total deaths in the event"
+      - name: assists
+        description: "Total assists in the event"
+      - name: first_kills
+        description: "Total first kills in the event"
+      - name: first_deaths
+        description: "Total first deaths in the event"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "player_id"]
+
+  - name: stg_player_stats
+    description: >
+      Union of all player-level stat tables across tournaments.
+      Each row contains the aggregated performance metrics of a player in a single event.
+    config:
+      tags: ["staging", "bridge", "player_stats"]
+    columns:
+      - name: event_id
+        description: "Tournament event ID"
+        tests:
+          - not_null
+      - name: player_id
+        description: "Player ID local to the event"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Team ID local to the event"
+        tests:
+          - not_null
+      - name: agents_count
+        description: "Number of different agents used by the player in the event"
+      - name: rounds
+        description: "Total rounds played by the player in the event"
+      - name: rating
+        description: "Overall player rating for the event"
+      - name: acs
+        description: "Average combat score across the event"
+      - name: kd_ratio
+        description: "Kill/death ratio"
+      - name: kast
+        description: "KAST percentage in the event"
+      - name: adr
+        description: "Average damage per round in the event"
+      - name: kpr
+        description: "Kills per round"
+      - name: apr
+        description: "Assists per round"
+      - name: fkpr
+        description: "First kills per round"
+      - name: fdpr
+        description: "First deaths per round"
+      - name: hs_percent
+        description: "Headshot percentage in the event"
+      - name: cl_percent
+        description: "Clutch success percentage"
+      - name: clutches
+        description: "Total number of clutches won"
+      - name: k_max
+        description: "Maximum kills in a single map"
+      - name: kills
+        description: "Total kills in the event"
+      - name: deaths
+        description: "Total deaths in the event"
+      - name: assists
+        description: "Total assists in the event"
+      - name: first_kills
+        description: "Total first kills in the event"
+      - name: first_deaths
+        description: "Total first deaths in the event"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "player_id"]
