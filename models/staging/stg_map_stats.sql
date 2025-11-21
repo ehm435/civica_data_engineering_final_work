@@ -10,6 +10,7 @@ with unioned_stats as (
 
 enriched as (
     select
+        {{ dbt_utils.generate_surrogate_key(['event_id', 'map_id']) }} as map_stats_id,
         event_id,
         map_id,
         times_played,

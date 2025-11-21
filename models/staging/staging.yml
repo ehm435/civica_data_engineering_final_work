@@ -804,3 +804,166 @@ models:
       - name: location
         description: "Event location"
 
+  - name: base_detailed_match_bangkok_2025
+    description: "Clean base model for map_matches_bangkok. Adds a fixed event_id and minimal column cleaning."
+    config:
+      tags: ["base", "map_matches", "bangkok"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event (e.g., masters_bangkok_2025)"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_bangkok_2025"]
+      - name: map_match_id
+        description: "Unique ID for the map-match row within this table"
+        tests:
+          - not_null
+      - name: match_id
+        description: "Match ID local to the tournament"
+        tests:
+          - not_null
+      - name: map_id
+        description: "Map ID local to the tournament"
+        tests:
+          - not_null
+      - name: map_order
+        description: "Order of the map in the match (1, 2, 3 …)"
+        tests:
+          - not_null
+      - name: score
+        description: "Score of the map (e.g., '13 - 9')"
+      - name: winner_id
+        description: "ID of the winner of the map"
+      - name: duration
+        description: "Duration of the map"
+      - name: picked_by
+        description: "ID of the team/player who picked the map"
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "map_match_id"]
+
+  - name: base_detailed_match_paris_2025
+    description: "Clean base model for map_matches_paris. Adds a fixed event_id and minimal column cleaning."
+    config:
+      tags: ["base", "map_matches", "paris"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event (e.g., masters_paris_2025)"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_paris_2025"]
+      - name: map_match_id
+        description: "Unique ID for the map-match row within this table"
+        tests:
+          - not_null
+      - name: match_id
+        description: "Match ID local to the tournament"
+        tests:
+          - not_null
+      - name: map_id
+        description: "Map ID local to the tournament"
+        tests:
+          - not_null
+      - name: map_order
+        description: "Order of the map in the match"
+        tests:
+          - not_null
+      - name: score
+        description: "Score of the map"
+      - name: winner_id
+        description: "ID of the winner of the map"
+      - name: duration
+        description: "Duration of the map"
+      - name: picked_by
+        description: "ID of the team/player who picked the map"
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "map_match_id"]
+
+  - name: base_detailed_match_toronto_2025
+    description: "Clean base model for map_matches_toronto. Adds a fixed event_id and minimal column cleaning."
+    config:
+      tags: ["base", "map_matches", "toronto"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event (e.g., masters_toronto_2025)"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_toronto_2025"]
+      - name: map_match_id
+        description: "Unique ID for the map-match row within this table"
+        tests:
+          - not_null
+      - name: match_id
+        description: "Match ID local to the tournament"
+        tests:
+          - not_null
+      - name: map_id
+        description: "Map ID local to the tournament"
+        tests:
+          - not_null
+      - name: map_order
+        description: "Order of the map in the match"
+        tests:
+          - not_null
+      - name: score
+        description: "Score of the map"
+      - name: winner_id
+        description: "ID of the winner of the map"
+      - name: duration
+        description: "Duration of the map"
+      - name: picked_by
+        description: "ID of the team/player who picked the map"
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "map_match_id"]
+
+  - name: stg_detailed_match_map
+    description: >
+      Union of all map-match tables across tournaments.
+      Provides a global surrogate key (map_match_pk) and keeps match-map-level stats.
+    config:
+      tags: ["staging", "bridge", "map_matches"]
+    columns:
+      - name: map_match_pk
+        description: "Global surrogate key for the map-match relationship"
+        tests:
+          - not_null
+          - unique
+      - name: event_id
+        description: "Tournament event ID"
+        tests:
+          - not_null
+      - name: match_id
+        description: "Match ID local to the tournament"
+        tests:
+          - not_null
+      - name: map_id
+        description: "Map ID local to the tournament"
+        tests:
+          - not_null
+      - name: map_order
+        description: "Order of the map within the match (1, 2, 3 …)"
+        tests:
+          - not_null
+      - name: score
+        description: "Score of the map (e.g., '13 - 9')"
+      - name: winner_id
+        description: "ID of the team/player that won this map"
+      - name: duration
+        description: "Duration of the map in seconds or minutes"
+      - name: picked_by
+        description: "ID of the team/player who picked the map"
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "match_id", "map_id", "map_order"]
