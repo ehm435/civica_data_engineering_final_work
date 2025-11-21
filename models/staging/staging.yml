@@ -629,3 +629,178 @@ models:
       - dbt_utils.unique_combination_of_columns:
           arguments:
             combination_of_columns: ["event_id", "agent_id"]
+
+  - name: base_players_bangkok_2025
+    description: "Clean base model for players_bangkok. Adds a fixed event_id and minimal column cleaning."
+    config:
+      tags: ["base", "players", "bangkok"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_bangkok_2025"]
+      - name: player_id
+        description: "Player identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: player_name
+        description: "Raw player name"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Local team identifier for the player"
+        tests:
+          - not_null
+      - name: start_date
+        description: "Start date of player's roster period"
+      - name: end_date
+        description: "End date of player's roster period"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "player_id"]
+
+  - name: base_players_paris_2025
+    description: "Clean base model for players_paris. Adds a fixed event_id and minimal column cleaning."
+    config:
+      tags: ["base", "players", "paris"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_paris_2025"]
+      - name: player_id
+        description: "Player identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: player_name
+        description: "Raw player name"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Local team identifier for the player"
+        tests:
+          - not_null
+      - name: start_date
+        description: "Start date of player's roster period"
+      - name: end_date
+        description: "End date of player's roster period"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "player_id"]
+
+  - name: base_players_toronto_2025
+    description: "Clean base model for players_toronto. Adds a fixed event_id and minimal column cleaning."
+    config:
+      tags: ["base", "players", "toronto"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_toronto_2025"]
+      - name: player_id
+        description: "Player identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: player_name
+        description: "Raw player name"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Local team identifier for the player"
+        tests:
+          - not_null
+      - name: start_date
+        description: "Start date of player's roster period"
+      - name: end_date
+        description: "End date of player's roster period"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "player_id"]
+
+  - name: stg_players
+    description: >
+      Union of all base player tables across tournaments.  
+      Generates a normalized player name and a surrogate key player_pk for cross-tournament analysis.
+    config:
+      tags: ["staging", "bridge", "players"]
+    columns:
+      - name: player_pk
+        description: "Global surrogate player key"
+        tests:
+          - not_null
+          - unique
+      - name: event_id
+        description: "Tournament event ID"
+        tests:
+          - not_null
+      - name: player_id
+        description: "Player ID local to the event"
+        tests:
+          - not_null
+      - name: player_name
+        description: "Raw player name"
+        tests:
+          - not_null
+      - name: player_name_norm
+        description: "Normalized player name (lowercase, trimmed)"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Team ID local to the event"
+        tests:
+          - not_null
+      - name: start_date
+        description: "Start date of player's roster period"
+      - name: end_date
+        description: "End date of player's roster period"
+
+  - name: stg_event_info
+    description: >
+      Staging table for tournament events.  
+      Normalizes the event_id as a surrogate key (hashed) and keeps all relevant attributes for cross-tournament analysis.
+    config:
+      tags: ["staging", "events"]
+    columns:
+      - name: event_id
+        description: "Hashed surrogate key for the event"
+        tests:
+          - not_null
+          - unique
+      - name: event_description
+        description: "Original event identifier from raw source"
+        tests:
+          - not_null
+      - name: event_name
+        description: "Official name of the event"
+        tests:
+          - not_null
+      - name: url
+        description: "URL with event information"
+      - name: title
+        description: "Event title"
+      - name: subtitle
+        description: "Event subtitle"
+      - name: start_date
+        description: "Event start date"
+      - name: end_date
+        description: "Event end date"
+      - name: price_pool
+        description: "Prize pool for the event"
+      - name: location
+        description: "Event location"
+

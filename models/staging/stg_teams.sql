@@ -20,7 +20,7 @@ with_norm as (
 with_pk as (
     select
         {{ dbt_utils.generate_surrogate_key(['event_id', 'team_name_norm']) }} as team_pk,
-        event_id,
+        md5(event_id) as event_id,
         team_id,
         team_name,
     from with_norm
