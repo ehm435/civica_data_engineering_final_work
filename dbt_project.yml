@@ -41,7 +41,7 @@ models:
     +materialized: view 
     staging:
       +database: "{{ env_var('DBT_ENVIRONMENTS') }}_silver"
-      +schema: dbt_valorant
+      +schema: valorant
       +materialized: view
 
     marts:
