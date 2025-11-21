@@ -1,7 +1,6 @@
 version: 2
 
 models:
-
   - name: base_maps_bangkok_2025
     description: "Clean base model for maps_bangkok. Adds a fixed event_id and applies minimal column cleaning."
     config:
@@ -29,7 +28,6 @@ models:
       - dbt_utils.unique_combination_of_columns:
           arguments:
             combination_of_columns: ["event_id", "map_id"]
-
 
   - name: base_maps_paris_2025
     description: "Clean base model for maps_paris. Adds a fixed event_id and applies minimal column cleaning."
@@ -59,7 +57,6 @@ models:
           arguments:
             combination_of_columns: ["event_id", "map_id"]
 
-
   - name: base_maps_toronto_2025
     description: "Clean base model for maps_toronto. Adds a fixed event_id and applies minimal column cleaning."
     config:
@@ -88,17 +85,99 @@ models:
           arguments:
             combination_of_columns: ["event_id", "map_id"]
 
+  - name: base_teams_bangkok_2025
+    description: "Clean base model for teams_bangkok. Adds a fixed event_id and applies minimal column cleaning."
+    config:
+      tags: ["base", "maps", "bangkok"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event (e.g., masters_bangkok_2025)"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_bangkok_2025"]
+      - name: team_id
+        description: "team identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: team_name
+        description: "Name of the team as provided in the raw data"
+        tests:
+          - not_null
+      - name: roster_made
+        description: "Timestamp of last member changed"
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "team_id"]
+
+  - name: base_teams_paris_2025
+    description: "Clean base model for teams_paris. Adds a fixed event_id and applies minimal column cleaning."
+    config:
+      tags: ["base", "teams", "paris"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event (e.g., masters_paris_2025)"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_paris_2025"]
+      - name: team_id
+        description: "team identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: team_name
+        description: "Name of the team as provided in the raw data"
+        tests:
+          - not_null
+      - name: roster_made
+        description: "Timestamp of last member changed"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "team_id"]
+
+  - name: base_teams_toronto_2025
+    description: "Clean base model for teams_toronto. Adds a fixed event_id and applies minimal column cleaning."
+    config:
+      tags: ["base", "teams", "toronto"]
+    columns:
+      - name: event_id
+        description: "Logical identifier for the event (e.g., masters_toronto_2025)"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_toronto_2025"]
+      - name: team_id
+        description: "team identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: team_name
+        description: "Name of the team as provided in the raw data"
+        tests:
+          - not_null
+      - name: roster_made
+        description: "Timestamp of last member changed"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "team_id"]
+
   - name: stg_maps
     description: >
-      Bridge table that maps each (event_id, map_id) pair — which uniquely
-      identifies a map inside a single tournament — to a global surrogate key (map_sk)
-      computed from the normalized map name.  
-      This enables analysis across tournaments using a single global map identifier.
+      Bridge table that maps each (event_id, maps_name) pair — which uniquely
+      identifies a map inside a single tournament — to a global surrogate key (map_pk)
+      computed from the normalized map name.
     config:
       tags: ["staging", "bridge", "maps"]
     columns:
-      - name: map_sk
-        description: "Global surrogate key for the map, identical for the same map across all tournaments"
+      - name: map_pk
+        description: "Global surrogate key for the map"
         tests:
           - not_null
       - name: event_id
@@ -119,4 +198,222 @@ models:
     tests:
       - dbt_utils.unique_combination_of_columns:
           arguments:
-            combination_of_columns: ["event_id", "map_id"]
+            combination_of_columns: ["event_id", "map_name"]
+      - dbt_utils.unique:
+          arguments:
+            column_name: map_pk
+
+  - name: stg_teams
+    description: >
+      Bridge table that maps each (event_id, team_name) pair — which uniquely
+      identifies a team inside a single tournament — to a global surrogate key (team_pk)
+      computed from the normalized team name.
+    config:
+      tags: ["staging", "bridge", "teams"]
+    columns:
+      - name: team_pk
+        description: "Global surrogate key for the team"
+        tests:
+          - not_null
+      - name: event_id
+        description: "Event to which this team_id belongs"
+        tests:
+          - not_null
+      - name: team_id
+        description: "team identifier inside the event (local key)"
+        tests:
+          - not_null
+      - name: team_name
+        description: "Raw team name used to compute the normalized identifier"
+        tests:
+          - not_null
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "team_name"]
+      - dbt_utils.unique:
+          arguments:
+            column_name: team_pk
+
+  - name: base_matches_bangkok_2025
+    description: "Clean base model for matches_bangkok. Adds a fixed event_id and applies minimal column cleaning."
+    config:
+      tags: ["base", "matches", "bangkok"]
+    columns:
+      - name: match_id
+        description: "Match identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: event_id
+        description: "Logical identifier for the event"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_bangkok_2025"]
+      - name: match_title
+        description: "Raw match title"
+        tests:
+          - not_null
+      - name: date
+        description: "Date of the match"
+      - name: stage
+        description: "Stage of the competition"
+      - name: format
+        description: "Match format (e.g., BO3, BO5)"
+      - name: team1
+        description: "Identifier of team 1"
+        tests:
+          - not_null
+      - name: team2
+        description: "Identifier of team 2"
+        tests:
+          - not_null
+      - name: score
+        description: "Final match score"
+      - name: maps_played
+        description: "Number of maps won per side"
+      - name: patch
+        description: "Game patch used"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "match_id"]
+
+  - name: base_matches_paris_2025
+    description: "Clean base model for matches_paris. Adds a fixed event_id and applies minimal column cleaning."
+    config:
+      tags: ["base", "matches", "paris"]
+    columns:
+      - name: match_id
+        description: "Match identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: event_id
+        description: "Logical identifier for the event"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_paris_2025"]
+      - name: match_title
+        description: "Raw match title"
+        tests:
+          - not_null
+      - name: date
+        description: "Date of the match"
+      - name: stage
+        description: "Stage of the competition"
+      - name: format
+        description: "Match format (e.g., BO3, BO5)"
+      - name: team1
+        description: "Identifier of team 1"
+        tests:
+          - not_null
+      - name: team2
+        description: "Identifier of team 2"
+        tests:
+          - not_null
+      - name: score
+        description: "Final match score"
+      - name: maps_played
+        description: "Number of maps won per side"
+      - name: patch
+        description: "Game patch used"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "match_id"]
+
+  - name: base_matches_toronto_2025
+    description: "Clean base model for matches_toronto. Adds a fixed event_id and applies minimal column cleaning."
+    config:
+      tags: ["base", "matches", "toronto"]
+    columns:
+      - name: match_id
+        description: "Match identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: event_id
+        description: "Logical identifier for the event"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["masters_toronto_2025"]
+      - name: match_title
+        description: "Raw match title"
+        tests:
+          - not_null
+      - name: date
+        description: "Date of the match"
+      - name: stage
+        description: "Stage of the competition"
+      - name: format
+        description: "Match format (e.g., BO3, BO5)"
+      - name: team1
+        description: "Identifier of team 1"
+        tests:
+          - not_null
+      - name: team2
+        description: "Identifier of team 2"
+        tests:
+          - not_null
+      - name: score
+        description: "Final match score"
+      - name: maps_played
+        description: "Number of maps won per side"
+      - name: patch
+        description: "Game patch used"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "match_id"]
+
+  - name: stg_matches
+    description: >
+      Union of all base match tables across tournaments.
+      Provides a global surrogate key match_pk and standardized match attributes.
+    config:
+      tags: ["staging", "bridge", "matches"]
+    columns:
+      - name: match_pk
+        description: "Global surrogate match key"
+        tests:
+          - not_null
+          - unique
+      - name: event_id
+        description: "Tournament event ID"
+        tests:
+          - not_null
+      - name: match_title
+        description: "Raw match title"
+        tests:
+          - not_null
+      - name: date
+        description: "Match date"
+      - name: stage
+        description: "Stage of competition"
+      - name: format
+        description: "Match format"
+      - name: team1
+        description: "Team 1 local identifier"
+        tests:
+          - not_null
+      - name: team2
+        description: "Team 2 local identifier"
+        tests:
+          - not_null
+      - name: score
+        description: "Final match score"
+      - name: maps_played
+        description: "Maps played during the match"
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "match_title"]

@@ -18,9 +18,9 @@ with_norm as (
     from unioned
 ),
 
-with_sk as (
+with_pk as (
     select
-        {{ dbt_utils.generate_surrogate_key(['map_name_norm']) }} as map_sk,
+        {{ dbt_utils.generate_surrogate_key(['event_id', 'map_name_norm']) }} as map_pk,
         event_id,
         map_id,
         map_name,
@@ -29,9 +29,9 @@ with_sk as (
 )
 
 select
-    map_sk,
+    map_pk,
     event_id,
     map_id,
     map_name,
     last_rework
-from with_sk
+from with_pk
