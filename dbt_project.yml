@@ -2,7 +2,7 @@
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
-name: 'my_new_project'
+name: 'civica_data_engineering_final_work'
 version: '1.0.0'
 config-version: 2
 
@@ -36,7 +36,20 @@ clean-targets:         # directories to be removed by `dbt clean`
 # using the `{{ config(...) }}` macro.
 
 models:
-  my_new_project:
-    # Applies to all files under models/example/
-    example:
+  civica_data_engineering_final_work:
+    
+    +materialized: view 
+    staging:
+      +database: "{{ env_var('DBT_ENVIRONMENTS') }}_silver"
+      +schema: valorant
+      +materialized: view
+
+    marts:
+      +database: "{{ env_var('DBT_ENVIRONMENTS') }}_gold"
+      +schema: marts
       +materialized: table
+snapshots:
+  +transient: false
+  +target_database: "{{ env_var('DBT_ENVIRONMENTS') }}_silver"
+  +target_schema: snapshots
+
