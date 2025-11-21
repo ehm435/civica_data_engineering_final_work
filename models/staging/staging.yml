@@ -168,74 +168,6 @@ models:
           arguments:
             combination_of_columns: ["event_id", "team_id"]
 
-  - name: stg_maps
-    description: >
-      Bridge table that maps each (event_id, maps_name) pair — which uniquely
-      identifies a map inside a single tournament — to a global surrogate key (map_pk)
-      computed from the normalized map name.
-    config:
-      tags: ["staging", "bridge", "maps"]
-    columns:
-      - name: map_pk
-        description: "Global surrogate key for the map"
-        tests:
-          - not_null
-      - name: event_id
-        description: "Event to which this map_id belongs"
-        tests:
-          - not_null
-      - name: map_id
-        description: "Map identifier inside the event (local key)"
-        tests:
-          - not_null
-      - name: map_name
-        description: "Raw map name used to compute the normalized identifier"
-        tests:
-          - not_null
-      - name: last_rework
-        description: "Last known map rework information"
-
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns: ["event_id", "map_name"]
-      - dbt_utils.unique:
-          arguments:
-            column_name: map_pk
-
-  - name: stg_teams
-    description: >
-      Bridge table that maps each (event_id, team_name) pair — which uniquely
-      identifies a team inside a single tournament — to a global surrogate key (team_pk)
-      computed from the normalized team name.
-    config:
-      tags: ["staging", "bridge", "teams"]
-    columns:
-      - name: team_pk
-        description: "Global surrogate key for the team"
-        tests:
-          - not_null
-      - name: event_id
-        description: "Event to which this team_id belongs"
-        tests:
-          - not_null
-      - name: team_id
-        description: "team identifier inside the event (local key)"
-        tests:
-          - not_null
-      - name: team_name
-        description: "Raw team name used to compute the normalized identifier"
-        tests:
-          - not_null
-
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns: ["event_id", "team_name"]
-      - dbt_utils.unique:
-          arguments:
-            column_name: team_pk
-
   - name: base_matches_bangkok_2025
     description: "Clean base model for matches_bangkok. Adds a fixed event_id and applies minimal column cleaning."
     config:
@@ -374,50 +306,6 @@ models:
           arguments:
             combination_of_columns: ["event_id", "match_id"]
 
-  - name: stg_matches
-    description: >
-      Union of all base match tables across tournaments.
-      Provides a global surrogate key match_pk and standardized match attributes.
-    config:
-      tags: ["staging", "bridge", "matches"]
-    columns:
-      - name: match_pk
-        description: "Global surrogate match key"
-        tests:
-          - not_null
-          - unique
-      - name: event_id
-        description: "Tournament event ID"
-        tests:
-          - not_null
-      - name: match_title
-        description: "Raw match title"
-        tests:
-          - not_null
-      - name: date
-        description: "Match date"
-      - name: stage
-        description: "Stage of competition"
-      - name: format
-        description: "Match format"
-      - name: team1
-        description: "Team 1 local identifier"
-        tests:
-          - not_null
-      - name: team2
-        description: "Team 2 local identifier"
-        tests:
-          - not_null
-      - name: score
-        description: "Final match score"
-      - name: maps_played
-        description: "Maps played during the match"
-
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns: ["event_id", "match_title"]
-
   - name: base_map_stats_bangkok_2025
     description: "Clean base model for map_stats_bangkok. Adds a fixed event_id and standardized typing."
     config:
@@ -508,33 +396,6 @@ models:
           arguments:
             combination_of_columns: ["event_id", "map_id"]
 
-  - name: stg_map_stats
-    description: >
-      Union of all tournament-level map stat tables.  
-      Provides a standardized set of map performance metrics per map per event.
-    config:
-      tags: ["staging", "bridge", "map_stats"]
-    columns:
-      - name: event_id
-        description: "Tournament event ID"
-        tests:
-          - not_null
-      - name: map_id
-        description: "Map identifier inside the event"
-        tests:
-          - not_null
-      - name: times_played
-        description: "How many times the map was played"
-      - name: attack_win_percent
-        description: "Percent of attack-sided victories"
-      - name: defense_win_percent
-        description: "Percent of defense-sided victories"
-
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns: ["event_id", "map_id"]
-
   - name: base_agents_stats_bangkok_2025
     description: "Clean base model for agent_stats_bangkok. Adds minimal typing and event ID validation."
     config:
@@ -601,29 +462,6 @@ models:
                 values: ["masters_toronto_2025"]
       - name: utilization_percent
         description: "Agent utilization percentage across all matches"
-
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns: ["event_id", "agent_id"]
-
-  - name: stg_agent_stats
-    description: >
-      Union of all agent stats across tournaments.  
-      Provides normalized agent usage percentages with standard field names.
-    config:
-      tags: ["staging", "agent_stats", "bridge"]
-    columns:
-      - name: agent_id
-        description: "Agent ID (local numeric identifier)"
-        tests:
-          - not_null
-      - name: event_id
-        description: "Tournament identifier"
-        tests:
-          - not_null
-      - name: utilization_percent
-        description: "Final agent usage percentage"
 
     tests:
       - dbt_utils.unique_combination_of_columns:
@@ -732,77 +570,6 @@ models:
           arguments:
             combination_of_columns: ["event_id", "player_id"]
 
-  - name: stg_players
-    description: >
-      Union of all base player tables across tournaments.  
-      Generates a normalized player name and a surrogate key player_pk for cross-tournament analysis.
-    config:
-      tags: ["staging", "bridge", "players"]
-    columns:
-      - name: player_pk
-        description: "Global surrogate player key"
-        tests:
-          - not_null
-          - unique
-      - name: event_id
-        description: "Tournament event ID"
-        tests:
-          - not_null
-      - name: player_id
-        description: "Player ID local to the event"
-        tests:
-          - not_null
-      - name: player_name
-        description: "Raw player name"
-        tests:
-          - not_null
-      - name: player_name_norm
-        description: "Normalized player name (lowercase, trimmed)"
-        tests:
-          - not_null
-      - name: team_id
-        description: "Team ID local to the event"
-        tests:
-          - not_null
-      - name: start_date
-        description: "Start date of player's roster period"
-      - name: end_date
-        description: "End date of player's roster period"
-
-  - name: stg_event_info
-    description: >
-      Staging table for tournament events.  
-      Normalizes the event_id as a surrogate key (hashed) and keeps all relevant attributes for cross-tournament analysis.
-    config:
-      tags: ["staging", "events"]
-    columns:
-      - name: event_id
-        description: "Hashed surrogate key for the event"
-        tests:
-          - not_null
-          - unique
-      - name: event_description
-        description: "Original event identifier from raw source"
-        tests:
-          - not_null
-      - name: event_name
-        description: "Official name of the event"
-        tests:
-          - not_null
-      - name: url
-        description: "URL with event information"
-      - name: title
-        description: "Event title"
-      - name: subtitle
-        description: "Event subtitle"
-      - name: start_date
-        description: "Event start date"
-      - name: end_date
-        description: "Event end date"
-      - name: price_pool
-        description: "Prize pool for the event"
-      - name: location
-        description: "Event location"
 
   - name: base_detailed_match_bangkok_2025
     description: "Clean base model for map_matches_bangkok. Adds a fixed event_id and minimal column cleaning."
@@ -926,47 +693,6 @@ models:
       - dbt_utils.unique_combination_of_columns:
           arguments:
             combination_of_columns: ["event_id", "map_match_id"]
-
-  - name: stg_detailed_match_map
-    description: >
-      Union of all map-match tables across tournaments.
-      Provides a global surrogate key (map_match_pk) and keeps match-map-level stats.
-    config:
-      tags: ["staging", "bridge", "map_matches"]
-    columns:
-      - name: map_match_pk
-        description: "Global surrogate key for the map-match relationship"
-        tests:
-          - not_null
-          - unique
-      - name: event_id
-        description: "Tournament event ID"
-        tests:
-          - not_null
-      - name: match_id
-        description: "Match ID local to the tournament"
-        tests:
-          - not_null
-      - name: map_id
-        description: "Map ID local to the tournament"
-        tests:
-          - not_null
-      - name: map_order
-        description: "Order of the map within the match (1, 2, 3 …)"
-        tests:
-          - not_null
-      - name: score
-        description: "Score of the map (e.g., '13 - 9')"
-      - name: winner_id
-        description: "ID of the team/player that won this map"
-      - name: duration
-        description: "Duration of the map in seconds or minutes"
-      - name: picked_by
-        description: "ID of the team/player who picked the map"
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns: ["event_id", "match_id", "map_id", "map_order"]
 
   - name: base_detailed_matches_player_stats_bangkok_2025
     description: "Clean base model for detailed_matches_player_stats_bangkok. Adds a fixed event_id and standardized typing."
@@ -1098,59 +824,6 @@ models:
           - not_null
       - name: map_id
         description: "Map identifier local to this specific tournament"
-        tests:
-          - not_null
-      - name: rating
-        description: "Player rating for this map"
-      - name: acs
-        description: "Average combat score"
-      - name: k
-        description: "Total kills in this map"
-      - name: d
-        description: "Total deaths in this map"
-      - name: a
-        description: "Total assists in this map"
-      - name: kd_diff
-        description: "Kill–death difference (K - D)"
-      - name: kast
-        description: "KAST percentage for the player in this map"
-      - name: adr
-        description: "Average damage per round"
-      - name: hs_percent
-        description: "Headshot percentage"
-      - name: fk
-        description: "First kills"
-      - name: fd
-        description: "First deaths"
-      - name: fk_fd_diff
-        description: "Difference between first kills and first deaths"
-
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns: ["event_id", "match_id", "player_id", "map_id", "agent_id"]
-
-  - name: stg_detailed_matches_player_stats
-    description: >
-      Union of all detailed match-level player stat tables across tournaments.
-      Each row represents the stats of a player on a given agent in a specific map of a match.
-    config:
-      tags: ["staging", "bridge", "detailed_matches_player_stats"]
-    columns:
-      - name: event_id
-        description: "Tournament event ID"
-        tests:
-          - not_null
-      - name: match_id
-        description: "Match ID local to the event"
-        tests:
-          - not_null
-      - name: player_id
-        description: "Player ID local to the event"
-        tests:
-          - not_null
-      - name: map_id
-        description: "Map ID local to the event"
         tests:
           - not_null
       - name: rating
@@ -1369,23 +1042,348 @@ models:
           arguments:
             combination_of_columns: ["event_id", "player_id"]
 
-  - name: stg_player_stats
+  # SOLO MODELOS SILVER / STAGING NORMALIZADOS (3FN)
+
+  - name: stg_event
     description: >
-      Union of all player-level stat tables across tournaments.
-      Each row contains the aggregated performance metrics of a player in a single event.
+      Normalized event dimension. One row per tournament (Masters Paris, Bangkok, Toronto, etc.).
     config:
-      tags: ["staging", "bridge", "player_stats"]
+      tags: ["staging", "dimension", "event"]
     columns:
+      - name: event_id
+        description: "Surrogate key for the event (hash)."
+        tests:
+          - not_null
+          - unique
+      - name: event_code
+        description: "Original event identifier from raw source (e.g., masters_paris_2025)."
+        tests:
+          - not_null
+          - unique
+      - name: event_name
+        description: "Official name of the event."
+        tests:
+          - not_null
+      - name: url
+        description: "URL with event information."
+      - name: title
+        description: "Event title."
+      - name: subtitle
+        description: "Event subtitle."
+      - name: start_date
+        description: "Event start date."
+      - name: end_date
+        description: "Event end date."
+      - name: prize_pool
+        description: "Prize pool for the event."
+      - name: location
+        description: "Event location."
+
+  - name: stg_map
+    description: >
+      Global map dimension. One row per unique map across all tournaments.
+    config:
+      tags: ["staging", "dimension", "maps"]
+    columns:
+      - name: map_id
+        description: "Surrogate key for the map (hash of normalized map name)."
+        tests:
+          - not_null
+          - unique
+      - name: map_name
+        description: "Canonical map name."
+        tests:
+          - not_null
+          - unique
+      - name: last_rework
+        description: "Last known map rework date or indicator."
+
+  - name: stg_agent
+    description: >
+      Global agent dimension. One row per unique agent in the game.
+    config:
+      tags: ["staging", "dimension", "agents"]
+    columns:
+      - name: agent_id
+        description: "Surrogate key for the agent."
+        tests:
+          - not_null
+          - unique
+      - name: agent_name
+        description: "Agent name as provided by the raw data."
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_stage
+    description: >
+      Stage dimension (Groups, Playoffs, Final, etc.) normalized from match data.
+    config:
+      tags: ["staging", "dimension", "stage"]
+    columns:
+      - name: stage_id
+        description: "Surrogate key for the competition stage (hash of stage name)."
+        tests:
+          - not_null
+          - unique
+      - name: stage_name
+        description: "Stage descriptive name."
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_match_format
+    description: >
+      Match format dimension (BO1, BO3, BO5...) normalized from match data.
+    config:
+      tags: ["staging", "dimension", "match_format"]
+    columns:
+      - name: format_id
+        description: "Surrogate key for the match format."
+        tests:
+          - not_null
+          - unique
+      - name: format_name
+        description: "Format name (e.g., BO3, BO5)."
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_event_team
+    description: >
+      Team as it appears in a specific event. Local team_id is scoped per event.
+    config:
+      tags: ["staging", "event_entity", "teams"]
+    columns:
+      - name: event_team_pk
+        description: "Surrogate primary key for the (event, team) pair."
+        tests:
+          - not_null
+          - unique
+      - name: event_id
+        description: "Event identifier (FK to stg_event)."
+        tests:
+          - not_null
+      - name: team_id
+        description: "Team ID local to the event (raw tournament ID)."
+        tests:
+          - not_null
+      - name: team_name
+        description: "Team name as provided in the raw data."
+        tests:
+          - not_null
+      - name: roster_made
+        description: "Timestamp of last roster change."
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "team_id"]
+
+  - name: stg_event_player
+    description: >
+      Player as it appears in a specific event. Local player_id and team_id are scoped per event.
+    config:
+      tags: ["staging", "event_entity", "players"]
+    columns:
+      - name: event_player_pk
+        description: "Surrogate primary key for the (event, player) pair."
+        tests:
+          - not_null
+          - unique
+      - name: event_id
+        description: "Event identifier (FK to stg_event)."
+        tests:
+          - not_null
+      - name: player_id
+        description: "Player ID local to the event."
+        tests:
+          - not_null
+      - name: player_name
+        description: "Player name as provided in the raw data."
+        tests:
+          - not_null
+      - name: team_id
+        description: "Team ID local to the event (FK to stg_event_team)."
+        tests:
+          - not_null
+      - name: start_date
+        description: "Start date of the player's roster period in this event."
+      - name: end_date
+        description: "End date of the player's roster period in this event."
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "player_id"]
+
+  - name: stg_match
+    description: >
+      Normalized match table. One row per match in a given event.
+      Links to stage and format dimensions by ID.
+    config:
+      tags: ["staging", "fact_structure", "matches"]
+    columns:
+      - name: match_pk
+        description: "Surrogate primary key for the match (hash of event_id + match_id)."
+        tests:
+          - not_null
+          - unique
+      - name: event_id
+        description: "Event identifier (FK to stg_event)."
+        tests:
+          - not_null
+      - name: match_id
+        description: "Match ID local to the event (from raw CSV)."
+        tests:
+          - not_null
+      - name: match_title
+        description: "Raw match title."
+        tests:
+          - not_null
+      - name: match_date
+        description: "Date of the match."
+      - name: stage_id
+        description: "Stage identifier (FK to stg_stage)."
+      - name: format_id
+        description: "Format identifier (FK to stg_match_format)."
+      - name: team1_id
+        description: "Local team ID of team 1 (FK to stg_event_team)."
+        tests:
+          - not_null
+      - name: team2_id
+        description: "Local team ID of team 2 (FK to stg_event_team)."
+        tests:
+          - not_null
+      - name: score
+        description: "Final match score."
+      - name: maps_played
+        description: "Number of maps played in the match."
+      - name: patch
+        description: "Game patch used."
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "match_id"]
+
+  - name: stg_match_map
+    description: >
+      Map played inside a match. One row per (event, match, map, map_order).
+    config:
+      tags: ["staging", "fact_structure", "match_maps"]
+    columns:
+      - name: match_map_pk
+        description: "Surrogate primary key for the match-map row."
+        tests:
+          - not_null
+          - unique
+      - name: event_id
+        description: "Event identifier (FK to stg_event)."
+        tests:
+          - not_null
+      - name: match_id
+        description: "Match ID local to the event (FK to stg_match)."
+        tests:
+          - not_null
+      - name: map_id
+        description: "Global map identifier (FK to stg_map)."
+        tests:
+          - not_null
+      - name: map_order
+        description: "Order of the map in the match (1, 2, 3…)."
+        tests:
+          - not_null
+      - name: score
+        description: "Score of this specific map (e.g., '13 - 9')."
+      - name: winner_team_id
+        description: "Local team ID of the map winner (FK to stg_event_team)."
+      - name: duration
+        description: "Duration of the map in seconds or minutes."
+      - name: picked_by_team_id
+        description: "Local team ID of the team that picked this map."
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "match_id", "map_id", "map_order"]
+
+  - name: stg_event_map_stats
+    description: >
+      Aggregated map statistics per event. One row per (event, map).
+    config:
+      tags: ["staging", "stats", "event_map_stats"]
+    columns:
+      - name: event_map_stats_pk
+        description: "Surrogate primary key for the (event, map) stats row."
+        tests:
+          - not_null
+          - unique
+      - name: event_id
+        description: "Event identifier (FK to stg_event)."
+        tests:
+          - not_null
+      - name: map_id
+        description: "Map identifier (FK to stg_map)."
+        tests:
+          - not_null
+      - name: times_played
+        description: "Number of times the map was played in the event."
+      - name: attack_win_percent
+        description: "Percentage of attack-sided wins on this map in the event."
+      - name: defense_win_percent
+        description: "Percentage of defense-sided wins on this map in the event."
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "map_id"]
+
+  - name: stg_event_agent_stats
+    description: >
+      Aggregated agent usage per event. One row per (event, agent).
+    config:
+      tags: ["staging", "stats", "event_agent_stats"]
+    columns:
+      - name: event_agent_stats_pk
+        description: "Surrogate primary key for the (event, agent) stats row."
+        tests:
+          - not_null
+          - unique
+      - name: event_id
+        description: "Event identifier (FK to stg_event)."
+        tests:
+          - not_null
+      - name: agent_id
+        description: "Agent identifier (FK to stg_agent)."
+        tests:
+          - not_null
+      - name: utilization_percent
+        description: "Agent utilization percentage across all matches in the event."
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "agent_id"]
+
+  - name: stg_player_event_stats
+    description: >
+      Union of player-level stats per event across tournaments.
+      Each row represents the aggregated performance of a player in a single event.
+    config:
+      tags: ["staging", "bridge", "player_event_stats"]
+    columns:
+      - name: player_event_stats_pk
+        description: "Surrogate primary key for the player–event stats row"
+        tests:
+          - not_null
+          - unique
       - name: event_id
         description: "Tournament event ID"
         tests:
           - not_null
       - name: player_id
         description: "Player ID local to the event"
-        tests:
-          - not_null
-      - name: team_id
-        description: "Team ID local to the event"
         tests:
           - not_null
       - name: agents_count
@@ -1433,3 +1431,56 @@ models:
       - dbt_utils.unique_combination_of_columns:
           arguments:
             combination_of_columns: ["event_id", "player_id"]
+
+  - name: stg_player_match_map_stats
+    description: >
+      Union of detailed per-map player stats across tournaments.
+      Each row is the performance of a player on a given map of a match in an event.
+    config:
+      tags: ["staging", "bridge", "player_match_map_stats"]
+    columns:
+      - name: player_match_map_stats_pk
+        description: "Surrogate primary key for the player–match–map stats row"
+        tests:
+          - not_null
+          - unique
+      - name: event_id
+        description: "Tournament event ID"
+        tests:
+          - not_null
+      - name: match_id
+        description: "Match ID local to the event"
+        tests:
+          - not_null
+      - name: map_id
+        description: "Map ID local to the event"
+        tests:
+          - not_null
+      - name: player_id
+        description: "Player ID local to the event"
+        tests:
+          - not_null
+      - name: rating
+        description: "Player rating for this map and match"
+      - name: acs
+        description: "Average combat score in this map"
+      - name: k
+        description: "Total kills in this map"
+      - name: d
+        description: "Total deaths in this map"
+      - name: a
+        description: "Total assists in this map"
+      - name: kd_diff
+        description: "Kill–death difference (K - D)"
+      - name: kast
+        description: "KAST percentage for the player in this map"
+      - name: adr
+        description: "Average damage per round in this map"
+      - name: hs_percent
+        description: "Headshot percentage in this map"
+      - name: fk
+        description: "First kills in this map"
+      - name: fd
+        description: "First deaths in this map"
+      - name: fk_fd_diff
+        description: "Difference between first kills and first deaths in this map"
