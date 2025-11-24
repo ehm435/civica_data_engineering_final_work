@@ -1,7 +1,6 @@
 {{ config(materialized='view') }}
 
-select * from {{ ref('base_player_stats_paris_2025') }}
-union all
-select * from {{ ref('base_player_stats_bangkok_2025') }}
-union all
-select * from {{ ref('base_player_stats_toronto_2025') }}
+{{ union_events(
+    table_prefix='base_players_stats', 
+    event_suffixes=['bangkok_2025', 'paris_2025', 'toronto_2025'] 
+) }}

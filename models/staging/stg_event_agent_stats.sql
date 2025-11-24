@@ -1,18 +1,10 @@
 {{ config(materialized='view') }}
 
 with unioned as (
-    select event_id, agent_id, utilization_percent
-    from {{ ref('base_agents_stats_bangkok_2025') }}
-
-    union all
-
-    select event_id, agent_id, utilization_percent
-    from {{ ref('base_agents_stats_paris_2025') }}
-
-    union all
-
-    select event_id, agent_id, utilization_percent
-    from {{ ref('base_agents_stats_toronto_2025') }}
+    {{ union_events(
+        table_prefix='base_agents_stats', 
+        event_suffixes=['bangkok_2025', 'paris_2025', 'toronto_2025'] 
+    ) }}
 )
 
 select
