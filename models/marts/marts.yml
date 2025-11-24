@@ -1,0 +1,144 @@
+version: 2
+
+models:
+  - name: dim_event
+    description: "Conformed dimension containing tournament details (Masters, Champions, etc.)."
+    config:
+      tags: ["gold", "dimension", "event"]
+    columns:
+      - name: event_pk
+        description: "Primary Key (Surrogate Hash)."
+        tests:
+          - unique
+          - not_null
+      - name: event_name
+        description: "Official name of the tournament."
+
+  - name: dim_map
+    description: "Conformed dimension for Valorant maps."
+    config:
+      tags: ["gold", "dimension", "map"]
+    columns:
+      - name: map_pk
+        description: "Primary Key (Surrogate Hash)."
+        tests:
+          - unique
+          - not_null
+      - name: map_name
+        description: "Canonical map name."
+
+  - name: dim_agent
+    description: "Conformed dimension for playable agents."
+    config:
+      tags: ["gold", "dimension", "agent"]
+    columns:
+      - name: agent_pk
+        description: "Primary Key (Surrogate Hash)."
+        tests:
+          - unique
+          - not_null
+      - name: agent_name
+        description: "Agent name (e.g., Jett, Omen)."
+
+  - name: dim_team
+    description: >
+      Conformed dimension for Teams.
+      NOTE: Generated based on normalized team names as source IDs are not global.
+    config:
+      tags: ["gold", "dimension", "team"]
+    columns:
+      - name: team_pk
+        description: "Primary Key (Surrogate Hash of Team Name)."
+        tests:
+          - unique
+          - not_null
+      - name: team_name
+        description: "Official team name."
+
+  - name: dim_player
+    description: >
+      Conformed dimension for Players.
+      NOTE: Generated based on player nicknames as source IDs are not global.
+    config:
+      tags: ["gold", "dimension", "player"]
+    columns:
+      - name: player_pk
+        description: "Primary Key (Surrogate Hash of Player Name)."
+        tests:
+          - unique
+          - not_null
+      - name: player_name
+        description: "Player active nickname."
+  - name: fct_player_map_performance
+    description: >
+      Granular fact table capturing individual player performance per map in a match.
+      Grain: One row per Player per Map per Match.
+    config:
+      tags: ["gold", "fact", "performance"]
+    columns:
+      - name: player_performance_sk
+        description: "Surrogate Key for the fact row."
+        tests:
+          - unique
+          - not_null
+      - name: event_fk
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_event')
+              field: event_pk
+      - name: match_fk
+        description: "Link to the specific match (degenerate dimension or separate dim)."
+      - name: map_fk
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_map')
+              field: map_pk
+      - name: player_fk
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_player')
+              field: player_pk
+      - name: team_fk
+        description: "Team the player was playing for in this specific event."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_team')
+              field: team_pk
+
+      - name: kills
+        description: "Total kills by the player in the map."
+      - name: deaths
+        description: "Total deaths."
+      - name: acs
+        description: "Average Combat Score."
+      - name: kd_diff
+        description: "Kill-Death Difference."
+
+  - name: fct_event_agent_stats
+    description: >
+      Aggregated fact table for Agent meta analysis per tournament.
+      Grain: One row per Agent per Event.
+    config:
+      tags: ["gold", "fact", "meta"]
+    columns:
+      - name: agent_stats_sk
+        description: "Surrogate Key."
+        tests:
+          - unique
+          - not_null
+      - name: event_fk
+        tests:
+          - relationships:
+              to: ref('dim_event')
+              field: event_pk
+      - name: agent_fk
+        tests:
+          - relationships:
+              to: ref('dim_agent')
+              field: agent_pk
+      - name: utilization_percent
+        description: "Pick rate percentage of the agent in the event."

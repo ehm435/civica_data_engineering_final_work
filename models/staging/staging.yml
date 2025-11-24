@@ -1102,8 +1102,6 @@ models:
         description: "Player name as provided in the raw data."
         tests:
           - not_null
-      - name: team_id
-        description: "Team ID local to the event (FK to stg_event_team)."
       - name: start_date
         description: "Start date of the player's roster period in this event."
       - name: end_date

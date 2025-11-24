@@ -12,7 +12,6 @@ select
     event_id,
     player_id,
     player_name,
-    team_id,
     start_date,
     end_date
 from unioned
