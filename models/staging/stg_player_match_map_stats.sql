@@ -1,4 +1,7 @@
-{{ config(materialized='view') }}
+{{ config(
+    materialized='incremental',
+    incremental_strategy='append'
+) }}
 
 with unioned as (
     select
@@ -19,6 +22,7 @@ with unioned as (
         fd,
         fk_fd_diff
     from {{ ref('base_detailed_matches_player_stats_paris_2025') }}
+    where player_id is not null
 
     union all
 
@@ -40,6 +44,7 @@ with unioned as (
         fd,
         fk_fd_diff
     from {{ ref('base_detailed_matches_player_stats_bangkok_2025') }}
+    where player_id is not null
 
     union all
 
@@ -61,6 +66,7 @@ with unioned as (
         fd,
         fk_fd_diff
     from {{ ref('base_detailed_matches_player_stats_toronto_2025') }}
+    
 ),
 
 with_pk as (
