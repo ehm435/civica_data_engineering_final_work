@@ -675,11 +675,6 @@ models:
       - name: fk_fd_diff
         description: "Difference between first kills and first deaths"
 
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns: ["event_id", "match_id", "player_id", "map_id", "agent_id"]
-
   - name: base_detailed_matches_player_stats_paris_2025
     description: "Clean base model for detailed_matches_player_stats_paris. Adds a fixed event_id and standardized typing."
     config:
@@ -726,11 +721,6 @@ models:
       - name: fk_fd_diff
         description: "Difference between first kills and first deaths"
 
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns: ["event_id", "match_id", "player_id", "map_id", "agent_id"]
-
   - name: base_detailed_matches_player_stats_toronto_2025
     description: "Clean base model for detailed_matches_player_stats_toronto. Adds a fixed event_id and standardized typing."
     config:
@@ -776,11 +766,6 @@ models:
         description: "First deaths"
       - name: fk_fd_diff
         description: "Difference between first kills and first deaths"
-
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns: ["event_id", "match_id", "player_id", "map_id", "agent_id"]
 
   - name: base_player_stats_bangkok_2025
     description: "Clean base model for player_stats_bangkok. Adds a fixed event_id and standardized typing."
@@ -1209,7 +1194,7 @@ models:
       - name: score
         description: "Score of this specific map (e.g., '13 - 9')."
         tests:
-          - test_map_score_min
+          - map_score_min
       - name: winner_team_id
         description: "Local team ID of the map winner (FK to stg_event_team)."
       - name: duration

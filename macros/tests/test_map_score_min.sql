@@ -1,5 +1,5 @@
 -- fails if any map has invalid score
-
+{% test map_score_min(model, column_name) %}
 with parsed as (
     select
         *,
@@ -19,3 +19,5 @@ where
             (left_score >= 13 OR right_score >= 13)
          OR (left_score = 12 AND right_score = 12)
         )
+
+{% endtest %}
