@@ -128,45 +128,52 @@ models:
       - name: headshot_percent
         description: "Headshot percentage."
 
-  - name: fct_event_agent_stats
+  - name: fct_player_map_performance
     description: >
-      Aggregated fact table for Agent meta analysis per tournament.
-      Calculates pick rates, win rates, and average performance metrics.
-      Grain: One row per Agent per Event.
+      Granular fact table capturing individual player performance per map in a match.
+      Grain: One row per Player per Map per Match.
     config:
-      tags: ["gold", "fact", "meta"]
+      tags: ["gold", "fact", "performance"]
     columns:
-      - name: agent_stats_sk
-        description: "Surrogate Key (Hash of Event + Agent Name)."
+      - name: player_performance_sk
+        description: "Surrogate Key for the fact row."
         tests:
           - unique
           - not_null
       - name: event_fk
         tests:
+          - not_null
           - relationships:
-              arguments:
-                to: ref('dim_event')
-                field: event_pk
-      - name: agent_fk
+              arguments: {to: ref('dim_event'), field: event_pk}
+      - name: map_fk
         tests:
+          - not_null
           - relationships:
-              arguments:
-                to: ref('dim_agent')
-                field: agent_pk
-      - name: picks
-        description: "Total number of maps where this agent was picked."
-      - name: wins
-        description: "Total number of maps won by players using this agent."
-      - name: losses
-        description: "Total number of maps lost."
-      - name: win_rate_percent
-        description: "Percentage of maps won (wins / picks * 100)."
-      - name: avg_kills_per_map
-        description: "Average kills per map with this agent."
-      - name: avg_deaths_per_map
-        description: "Average deaths per map with this agent."
-      - name: avg_acs
-        description: "Average Combat Score (ACS) with this agent."
+              arguments: {to: ref('dim_map'), field: map_pk}
+      - name: player_fk
+        tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_player'), field: player_pk}
+      - name: team_fk
+        description: "Team the player was playing for in this specific event."
+        tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_team'), field: team_pk}
+      - name: match_fk
+        description: "Link to Match Dimension (Context)."
+        tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_match'), field: match_pk}
+      - name: kills
+      - name: deaths
+      - name: acs
+      - name: rating
+      - name: kd_diff
+      - name: kast_percent
+      - name: headshot_percent
 
   - name: int_event_player_directory
     description: >
@@ -195,3 +202,15 @@ models:
       - dbt_utils.unique_combination_of_columns:
           arguments:
             combination_of_columns: ["event_id", "global_player_id"]
+      
+      - name: dim_match
+        description: "Dimension containing match context (Date, Stage, Format)."
+        config:
+          tags: ["gold", "dimension", "match"]
+        columns:
+          - name: match_pk
+            tests: [unique, not_null]
+          - name: match_title
+          - name: match_date
+          - name: stage_name
+          - name: format_name
