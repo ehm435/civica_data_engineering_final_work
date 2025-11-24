@@ -2,6 +2,7 @@
 
 select
     event_pk,
+    event_id,
     event_name,
     location,
     prize_pool,
