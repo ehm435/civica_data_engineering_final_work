@@ -1,5 +1,8 @@
--- models/staging/stg_match.sql
-{{ config(materialized='view') }}
+{{ config(
+    materialized='incremental',
+    incremental_strategy='merge',
+    unique_key=['event_id', 'match_id']
+) }}
 
 with unioned as (
     select

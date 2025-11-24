@@ -18,4 +18,4 @@ select
     cast(fd       as integer) as fd,
     cast(fk_fd_diff as integer) as fk_fd_diff
 from {{ source('raw_data', 'detailed_matches_player_stats_paris') }}
-
+where player_id is not null

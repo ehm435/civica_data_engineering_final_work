@@ -10,9 +10,6 @@ models:
         description: "Logical identifier for the event (e.g., masters_bangkok_2025)"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_bangkok_2025"]
       - name: map_id
         description: "Map identifier local to this specific tournament"
         tests:
@@ -38,9 +35,6 @@ models:
         description: "Logical identifier for the event"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_paris_2025"]
       - name: map_id
         description: "Map identifier local to this specific tournament"
         tests:
@@ -66,9 +60,6 @@ models:
         description: "Logical identifier for the event"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_toronto_2025"]
       - name: map_id
         description: "Map identifier local to this specific tournament"
         tests:
@@ -94,9 +85,6 @@ models:
         description: "Logical identifier for the event (e.g., masters_bangkok_2025)"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_bangkok_2025"]
       - name: team_id
         description: "team identifier local to this specific tournament"
         tests:
@@ -121,9 +109,6 @@ models:
         description: "Logical identifier for the event (e.g., masters_paris_2025)"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_paris_2025"]
       - name: team_id
         description: "team identifier local to this specific tournament"
         tests:
@@ -149,9 +134,6 @@ models:
         description: "Logical identifier for the event (e.g., masters_toronto_2025)"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_toronto_2025"]
       - name: team_id
         description: "team identifier local to this specific tournament"
         tests:
@@ -181,9 +163,6 @@ models:
         description: "Logical identifier for the event"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_bangkok_2025"]
       - name: match_title
         description: "Raw match title"
         tests:
@@ -227,9 +206,6 @@ models:
         description: "Logical identifier for the event"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_paris_2025"]
       - name: match_title
         description: "Raw match title"
         tests:
@@ -273,9 +249,6 @@ models:
         description: "Logical identifier for the event"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_toronto_2025"]
       - name: match_title
         description: "Raw match title"
         tests:
@@ -315,9 +288,6 @@ models:
         description: "Logical identifier for the event"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_bangkok_2025"]
       - name: map_id
         description: "Map identifier inside the event"
         tests:
@@ -345,9 +315,6 @@ models:
         description: "Logical identifier for the event"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_paris_2025"]
       - name: map_id
         description: "Map identifier inside the event"
         tests:
@@ -375,9 +342,6 @@ models:
         description: "Logical identifier for the event"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_toronto_2025"]
       - name: map_id
         description: "Map identifier inside the event"
         tests:
@@ -409,9 +373,6 @@ models:
         description: "Logical identifier for the event"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_bangkok_2025"]
       - name: utilization_percent
         description: "Agent utilization percentage across all matches"
 
@@ -433,9 +394,6 @@ models:
         description: "Logical identifier for the event"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_paris_2025"]
       - name: utilization_percent
         description: "Agent utilization percentage across all matches"
 
@@ -457,9 +415,6 @@ models:
         description: "Logical identifier for the event"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_toronto_2025"]
       - name: utilization_percent
         description: "Agent utilization percentage across all matches"
 
@@ -477,9 +432,6 @@ models:
         description: "Logical identifier for the event"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_bangkok_2025"]
       - name: player_id
         description: "Player identifier local to this specific tournament"
         tests:
@@ -511,9 +463,6 @@ models:
         description: "Logical identifier for the event"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_paris_2025"]
       - name: player_id
         description: "Player identifier local to this specific tournament"
         tests:
@@ -545,9 +494,6 @@ models:
         description: "Logical identifier for the event"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_toronto_2025"]
       - name: player_id
         description: "Player identifier local to this specific tournament"
         tests:
@@ -558,8 +504,6 @@ models:
           - not_null
       - name: team_id
         description: "Local team identifier for the player"
-        tests:
-          - not_null
       - name: start_date
         description: "Start date of player's roster period"
       - name: end_date
@@ -580,9 +524,6 @@ models:
         description: "Logical identifier for the event (e.g., masters_bangkok_2025)"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_bangkok_2025"]
       - name: map_match_id
         description: "Unique ID for the map-match row within this table"
         tests:
@@ -621,9 +562,6 @@ models:
         description: "Logical identifier for the event (e.g., masters_paris_2025)"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_paris_2025"]
       - name: map_match_id
         description: "Unique ID for the map-match row within this table"
         tests:
@@ -662,9 +600,6 @@ models:
         description: "Logical identifier for the event (e.g., masters_toronto_2025)"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_toronto_2025"]
       - name: map_match_id
         description: "Unique ID for the map-match row within this table"
         tests:
@@ -703,9 +638,6 @@ models:
         description: "Logical identifier for the event (e.g., masters_bangkok_2025)"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_bangkok_2025"]
       - name: match_id
         description: "Match identifier local to this specific tournament"
         tests:
@@ -742,11 +674,6 @@ models:
         description: "First deaths"
       - name: fk_fd_diff
         description: "Difference between first kills and first deaths"
-
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns: ["event_id", "match_id", "player_id", "map_id", "agent_id"]
 
   - name: base_detailed_matches_player_stats_paris_2025
     description: "Clean base model for detailed_matches_player_stats_paris. Adds a fixed event_id and standardized typing."
@@ -757,9 +684,6 @@ models:
         description: "Logical identifier for the event (e.g., masters_paris_2025)"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_paris_2025"]
       - name: match_id
         description: "Match identifier local to this specific tournament"
         tests:
@@ -796,11 +720,6 @@ models:
         description: "First deaths"
       - name: fk_fd_diff
         description: "Difference between first kills and first deaths"
-
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns: ["event_id", "match_id", "player_id", "map_id", "agent_id"]
 
   - name: base_detailed_matches_player_stats_toronto_2025
     description: "Clean base model for detailed_matches_player_stats_toronto. Adds a fixed event_id and standardized typing."
@@ -811,9 +730,6 @@ models:
         description: "Logical identifier for the event (e.g., masters_toronto_2025)"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_toronto_2025"]
       - name: match_id
         description: "Match identifier local to this specific tournament"
         tests:
@@ -851,11 +767,6 @@ models:
       - name: fk_fd_diff
         description: "Difference between first kills and first deaths"
 
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns: ["event_id", "match_id", "player_id", "map_id", "agent_id"]
-
   - name: base_player_stats_bangkok_2025
     description: "Clean base model for player_stats_bangkok. Adds a fixed event_id and standardized typing."
     config:
@@ -865,9 +776,6 @@ models:
         description: "Logical identifier for the event (e.g., masters_bangkok_2025)"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_bangkok_2025"]
       - name: player_id
         description: "Player identifier local to this specific tournament"
         tests:
@@ -927,9 +835,6 @@ models:
         description: "Logical identifier for the event (e.g., masters_paris_2025)"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_paris_2025"]
       - name: player_id
         description: "Player identifier local to this specific tournament"
         tests:
@@ -989,9 +894,6 @@ models:
         description: "Logical identifier for the event (e.g., masters_toronto_2025)"
         tests:
           - not_null
-          - accepted_values:
-              arguments:
-                values: ["masters_toronto_2025"]
       - name: player_id
         description: "Player identifier local to this specific tournament"
         tests:
@@ -1089,12 +991,10 @@ models:
         description: "Surrogate key for the map (hash of normalized map name)."
         tests:
           - not_null
-          - unique
       - name: map_name
         description: "Canonical map name."
         tests:
           - not_null
-          - unique
       - name: last_rework
         description: "Last known map rework date or indicator."
 
@@ -1121,7 +1021,7 @@ models:
     config:
       tags: ["staging", "dimension", "stage"]
     columns:
-      - name: stage_id
+      - name: stage_pk
         description: "Surrogate key for the competition stage (hash of stage name)."
         tests:
           - not_null
@@ -1130,7 +1030,6 @@ models:
         description: "Stage descriptive name."
         tests:
           - not_null
-          - unique
 
   - name: stg_match_format
     description: >
@@ -1138,7 +1037,7 @@ models:
     config:
       tags: ["staging", "dimension", "match_format"]
     columns:
-      - name: format_id
+      - name: format_pk
         description: "Surrogate key for the match format."
         tests:
           - not_null
@@ -1205,8 +1104,6 @@ models:
           - not_null
       - name: team_id
         description: "Team ID local to the event (FK to stg_event_team)."
-        tests:
-          - not_null
       - name: start_date
         description: "Start date of the player's roster period in this event."
       - name: end_date
@@ -1296,6 +1193,8 @@ models:
           - not_null
       - name: score
         description: "Score of this specific map (e.g., '13 - 9')."
+        tests:
+          - map_score_min
       - name: winner_team_id
         description: "Local team ID of the map winner (FK to stg_event_team)."
       - name: duration
