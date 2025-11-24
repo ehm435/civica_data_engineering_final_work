@@ -650,6 +650,10 @@ models:
         description: "Map identifier local to this specific tournament"
         tests:
           - not_null
+      - name: agent_id
+        description: "id of the agent used by the player on the map"
+        tests:
+          - not_null
       - name: rating
         description: "Player rating for this map"
       - name: acs
@@ -696,6 +700,10 @@ models:
         description: "Map identifier local to this specific tournament"
         tests:
           - not_null
+      - name: agent_id
+        description: "id of the agent used by the player on the map"
+        tests:
+          - not_null
       - name: rating
         description: "Player rating for this map"
       - name: acs
@@ -740,6 +748,10 @@ models:
           - not_null
       - name: map_id
         description: "Map identifier local to this specific tournament"
+        tests:
+          - not_null
+      - name: agent_id
+        description: "id of the agent used by the player on the map"
         tests:
           - not_null
       - name: rating
@@ -1361,6 +1373,8 @@ models:
         description: "Player ID local to the event"
         tests:
           - not_null
+      - name: agent_id
+        description: "id of the agent used by the player on the map"
       - name: rating
         description: "Player rating for this map and match"
       - name: acs

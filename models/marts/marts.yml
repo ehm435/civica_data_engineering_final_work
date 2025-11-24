@@ -88,31 +88,31 @@ models:
         tests:
           - not_null
           - relationships:
-            arguments:
-              to: ref('dim_event')
-              field: event_pk
+              arguments:
+                to: ref('dim_event')
+                field: event_pk
       - name: map_fk
         tests:
           - not_null
           - relationships:
-            arguments:
-              to: ref('dim_map')
-              field: map_pk
+              arguments:
+                to: ref('dim_map')
+                field: map_pk
       - name: player_fk
         tests:
           - not_null
           - relationships:
-            arguments:
-              to: ref('dim_player')
-              field: player_pk
+              arguments:
+                to: ref('dim_player')
+                field: player_pk
       - name: team_fk
         description: "Team the player was playing for in this specific event."
         tests:
           - not_null
           - relationships:
-            arguments:
-              to: ref('dim_team')
-              field: team_pk
+              arguments:
+                to: ref('dim_team')
+                field: team_pk
       - name: kills
         description: "Total kills by the player in the map."
       - name: deaths
@@ -131,26 +131,67 @@ models:
   - name: fct_event_agent_stats
     description: >
       Aggregated fact table for Agent meta analysis per tournament.
+      Calculates pick rates, win rates, and average performance metrics.
       Grain: One row per Agent per Event.
     config:
       tags: ["gold", "fact", "meta"]
     columns:
       - name: agent_stats_sk
-        description: "Surrogate Key."
+        description: "Surrogate Key (Hash of Event + Agent Name)."
         tests:
           - unique
           - not_null
       - name: event_fk
         tests:
           - relationships:
-            arguments:
-              to: ref('dim_event')
-              field: event_pk
+              arguments:
+                to: ref('dim_event')
+                field: event_pk
       - name: agent_fk
         tests:
           - relationships:
-            arguments:
-              to: ref('dim_agent')
-              field: agent_pk
-      - name: utilization_percent
-        description: "Pick rate percentage of the agent in the event."
+              arguments:
+                to: ref('dim_agent')
+                field: agent_pk
+      - name: picks
+        description: "Total number of maps where this agent was picked."
+      - name: wins
+        description: "Total number of maps won by players using this agent."
+      - name: losses
+        description: "Total number of maps lost."
+      - name: win_rate_percent
+        description: "Percentage of maps won (wins / picks * 100)."
+      - name: avg_kills_per_map
+        description: "Average kills per map with this agent."
+      - name: avg_deaths_per_map
+        description: "Average deaths per map with this agent."
+      - name: avg_acs
+        description: "Average Combat Score (ACS) with this agent."
+
+  - name: int_event_player_directory
+    description: >
+      Intermediate model that acts as a central directory to resolve Player identities 
+      and their Team affiliations per Event. 
+      Designed to be reused by any future fact table requiring player context.
+    config:
+      tags: ["gold", "intermediate", "directory"]
+    columns:
+      - name: event_id
+        description: "Event identifier."
+        tests:
+          - not_null
+      - name: global_player_id
+        description: "Consistent numeric Player ID across tournaments."
+        tests:
+          - not_null
+      - name: team_name
+        description: "Resolved Team Name for the player in this event."
+      - name: player_fk
+        description: "Pre-calculated Surrogate Key for dim_player."
+      - name: team_fk
+        description: "Pre-calculated Surrogate Key for dim_team."
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "global_player_id"]
