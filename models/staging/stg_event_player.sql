@@ -11,6 +11,7 @@ select
     {{ dbt_utils.generate_surrogate_key(['event_id','player_id']) }} as event_player_pk,
     event_id,
     player_id,
+    team_id,
     player_name,
     start_date,
     end_date

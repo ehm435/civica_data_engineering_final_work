@@ -13,14 +13,14 @@ agent_directory as (
 )
 
 select
-    {{ dbt_utils.generate_surrogate_key(['as.event_id', 'ad.agent_name']) }} as agent_stats_sk,
+    {{ dbt_utils.generate_surrogate_key(['ast.event_id', 'ad.agent_name']) }} as agent_stats_sk,
 
-    as.event_id as event_fk,
+    ast.event_id as event_fk,
     
     {{ dbt_utils.generate_surrogate_key(['ad.agent_name']) }} as agent_fk,
 
-    as.utilization_percent
+    ast.utilization_percent
 
-from agent_stats as "as"
+from agent_stats as ast
 left join agent_directory ad 
-    on as.agent_id = ad.agent_id
+    on ast.agent_id = ad.agent_id

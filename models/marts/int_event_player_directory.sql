@@ -1,5 +1,4 @@
 {{ config(materialized='view') }}
---directory made for reusability
 
 with players as (
     select event_id, player_id, player_name, team_id
@@ -13,11 +12,9 @@ teams as (
 
 select
     p.event_id,
-    p.player_id as local_player_id,
-    p.player_name,
+    p.player_id as global_player_id,
     t.team_name,
-    
-    {{ dbt_utils.generate_surrogate_key(['p.player_name']) }} as player_fk,
+    {{ dbt_utils.generate_surrogate_key(['p.player_id']) }} as player_fk,
     {{ dbt_utils.generate_surrogate_key(['t.team_name']) }} as team_fk
 
 from players p

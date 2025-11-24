@@ -1098,6 +1098,10 @@ models:
         description: "Player ID local to the event."
         tests:
           - not_null
+      - name: team_id
+        description: id of the team where was playing in that tournament
+        tests:
+          - not_null
       - name: player_name
         description: "Player name as provided in the raw data."
         tests:

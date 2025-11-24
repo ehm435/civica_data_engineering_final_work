@@ -43,7 +43,7 @@ models:
   - name: dim_team
     description: >
       Conformed dimension for Teams.
-      NOTE: Generated based on normalized team names as source IDs are not global.
+      NOTE: PK generated based on normalized team names as we treat 'Team Name' as the unifying entity across tournaments.
     config:
       tags: ["gold", "dimension", "team"]
     columns:
@@ -58,17 +58,20 @@ models:
   - name: dim_player
     description: >
       Conformed dimension for Players.
-      NOTE: Generated based on player nicknames as source IDs are not global.
+      NOTE: PK generated based on Global Player ID provided by source.
     config:
       tags: ["gold", "dimension", "player"]
     columns:
       - name: player_pk
-        description: "Primary Key (Surrogate Hash of Player Name)."
+        description: "Primary Key (Surrogate Hash of Global Player ID)."
         tests:
           - unique
           - not_null
+      - name: player_source_id
+        description: "Original Global ID from raw data."
       - name: player_name
-        description: "Player active nickname."
+        description: "Most recent known nickname for the player."
+
   - name: fct_player_map_performance
     description: >
       Granular fact table capturing individual player performance per map in a match.
@@ -85,20 +88,21 @@ models:
         tests:
           - not_null
           - relationships:
+            arguments:
               to: ref('dim_event')
               field: event_pk
-      - name: match_fk
-        description: "Link to the specific match (degenerate dimension or separate dim)."
       - name: map_fk
         tests:
           - not_null
           - relationships:
+            arguments:
               to: ref('dim_map')
               field: map_pk
       - name: player_fk
         tests:
           - not_null
           - relationships:
+            arguments:
               to: ref('dim_player')
               field: player_pk
       - name: team_fk
@@ -106,17 +110,23 @@ models:
         tests:
           - not_null
           - relationships:
+            arguments:
               to: ref('dim_team')
               field: team_pk
-
       - name: kills
         description: "Total kills by the player in the map."
       - name: deaths
         description: "Total deaths."
       - name: acs
         description: "Average Combat Score."
+      - name: rating
+        description: "VLR/TheSpike Rating."
       - name: kd_diff
         description: "Kill-Death Difference."
+      - name: kast_percent
+        description: "Kill, Assist, Survive, Trade percentage."
+      - name: headshot_percent
+        description: "Headshot percentage."
 
   - name: fct_event_agent_stats
     description: >
@@ -133,11 +143,13 @@ models:
       - name: event_fk
         tests:
           - relationships:
+            arguments:
               to: ref('dim_event')
               field: event_pk
       - name: agent_fk
         tests:
           - relationships:
+            arguments:
               to: ref('dim_agent')
               field: agent_pk
       - name: utilization_percent
