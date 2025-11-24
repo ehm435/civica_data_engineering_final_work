@@ -1,14 +1,10 @@
 {{ config(materialized='view') }}
 
 with unioned as (
-    select event_id, player_id, player_name, team_id, start_date, end_date
-    from {{ ref('base_players_bangkok_2025') }}
-    union all
-    select event_id, player_id, player_name, team_id, start_date, end_date
-    from {{ ref('base_players_paris_2025') }}
-    union all
-    select event_id, player_id, player_name, team_id, start_date, end_date
-    from {{ ref('base_players_toronto_2025') }}
+    {{ union_events(
+        table_prefix='base_players', 
+        event_suffixes=['bangkok_2025', 'paris_2025', 'toronto_2025'] 
+    ) }}
 )
 
 select

@@ -1,14 +1,10 @@
 {{ config(materialized='view') }}
 
 with unioned as (
-    select map_id, map_name, last_rework
-    from {{ ref('base_maps_bangkok_2025') }}
-    union all
-    select map_id, map_name, last_rework
-    from {{ ref('base_maps_paris_2025') }}
-    union all
-    select map_id, map_name, last_rework
-    from {{ ref('base_maps_toronto_2025') }}
+    {{ union_events(
+        table_prefix='base_maps', 
+        event_suffixes=['bangkok_2025', 'paris_2025', 'toronto_2025'] 
+    ) }}
 )
 
 select

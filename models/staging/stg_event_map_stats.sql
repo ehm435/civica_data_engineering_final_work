@@ -1,18 +1,10 @@
 {{ config(materialized='view') }}
 
 with unioned as (
-    select event_id, map_id, times_played, attack_win_percent, defense_win_percent
-    from {{ ref('base_map_stats_bangkok_2025') }}
-
-    union all
-
-    select event_id, map_id, times_played, attack_win_percent, defense_win_percent
-    from {{ ref('base_map_stats_paris_2025') }}
-
-    union all
-
-    select event_id, map_id, times_played, attack_win_percent, defense_win_percent
-    from {{ ref('base_map_stats_toronto_2025') }}
+    {{ union_events(
+        table_prefix='base_map_stats', 
+        event_suffixes=['bangkok_2025', 'paris_2025', 'toronto_2025'] 
+    ) }}
 )
 
 select
