@@ -1,6 +1,7 @@
 version: 2
 
 models:
+
   - name: dim_event
     description: "Conformed dimension containing tournament details (Masters, Champions, etc.)."
     config:
@@ -72,108 +73,17 @@ models:
       - name: player_name
         description: "Most recent known nickname for the player."
 
-  - name: fct_player_map_performance
-    description: >
-      Granular fact table capturing individual player performance per map in a match.
-      Grain: One row per Player per Map per Match.
+  - name: dim_match
+    description: "Dimension containing match context (Date, Stage, Format)."
     config:
-      tags: ["gold", "fact", "performance"]
+      tags: ["gold", "dimension", "match"]
     columns:
-      - name: player_performance_sk
-        description: "Surrogate Key for the fact row."
-        tests:
-          - unique
-          - not_null
-      - name: event_fk
-        tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_event')
-                field: event_pk
-      - name: map_fk
-        tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_map')
-                field: map_pk
-      - name: player_fk
-        tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_player')
-                field: player_pk
-      - name: team_fk
-        description: "Team the player was playing for in this specific event."
-        tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_team')
-                field: team_pk
-      - name: kills
-        description: "Total kills by the player in the map."
-      - name: deaths
-        description: "Total deaths."
-      - name: acs
-        description: "Average Combat Score."
-      - name: rating
-        description: "VLR/TheSpike Rating."
-      - name: kd_diff
-        description: "Kill-Death Difference."
-      - name: kast_percent
-        description: "Kill, Assist, Survive, Trade percentage."
-      - name: headshot_percent
-        description: "Headshot percentage."
-
-  - name: fct_player_map_performance
-    description: >
-      Granular fact table capturing individual player performance per map in a match.
-      Grain: One row per Player per Map per Match.
-    config:
-      tags: ["gold", "fact", "performance"]
-    columns:
-      - name: player_performance_sk
-        description: "Surrogate Key for the fact row."
-        tests:
-          - unique
-          - not_null
-      - name: event_fk
-        tests:
-          - not_null
-          - relationships:
-              arguments: {to: ref('dim_event'), field: event_pk}
-      - name: map_fk
-        tests:
-          - not_null
-          - relationships:
-              arguments: {to: ref('dim_map'), field: map_pk}
-      - name: player_fk
-        tests:
-          - not_null
-          - relationships:
-              arguments: {to: ref('dim_player'), field: player_pk}
-      - name: team_fk
-        description: "Team the player was playing for in this specific event."
-        tests:
-          - not_null
-          - relationships:
-              arguments: {to: ref('dim_team'), field: team_pk}
-      - name: match_fk
-        description: "Link to Match Dimension (Context)."
-        tests:
-          - not_null
-          - relationships:
-              arguments: {to: ref('dim_match'), field: match_pk}
-      - name: kills
-      - name: deaths
-      - name: acs
-      - name: rating
-      - name: kd_diff
-      - name: kast_percent
-      - name: headshot_percent
+      - name: match_pk
+        tests: [unique, not_null]
+      - name: match_title
+      - name: match_date
+      - name: stage_name
+      - name: format_name
 
   - name: int_event_player_directory
     description: >
@@ -202,15 +112,60 @@ models:
       - dbt_utils.unique_combination_of_columns:
           arguments:
             combination_of_columns: ["event_id", "global_player_id"]
-      
-      - name: dim_match
-        description: "Dimension containing match context (Date, Stage, Format)."
-        config:
-          tags: ["gold", "dimension", "match"]
-        columns:
-          - name: match_pk
-            tests: [unique, not_null]
-          - name: match_title
-          - name: match_date
-          - name: stage_name
-          - name: format_name
+
+  - name: fct_player_map_performance
+    description: >
+      Granular fact table capturing individual player performance per map in a match.
+      Grain: One row per Player per Map per Match.
+    config:
+      tags: ["gold", "fact", "performance"]
+    columns:
+      - name: player_performance_sk
+        description: "Surrogate Key for the fact row."
+        tests:
+          - unique
+          - not_null
+      - name: event_fk
+        tests:
+          - not_null
+          - relationships:
+              arguments: 
+                  to: ref('dim_event')
+                  field: event_pk
+      - name: map_fk
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_map')
+                field: map_pk
+      - name: player_fk
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_player')
+                field: player_pk
+      - name: team_fk
+        description: "Team the player was playing for in this specific event."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_team')
+                field: team_pk
+      - name: match_fk
+        description: "Link to Match Dimension (Context)."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_match')
+                field: match_pk
+      - name: kills
+      - name: deaths
+      - name: acs
+      - name: rating
+      - name: kd_diff
+      - name: kast_percent
+      - name: headshot_percent
