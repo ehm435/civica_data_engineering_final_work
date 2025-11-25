@@ -22,6 +22,11 @@ map_results as (
     from {{ ref('stg_match_map') }}
 ),
 
+map_name_resolver as (
+    select event_id, map_id, map_name
+    from {{ ref('stg_map') }}
+),
+
 team_resolver as (
     select event_id, team_id, team_name 
     from {{ ref('stg_event_team') }}
@@ -38,7 +43,7 @@ player_roster as (
 select
     {{ dbt_utils.generate_surrogate_key(['s.player_match_map_stats_pk']) }} as player_performance_sk,
     {{ dbt_utils.generate_surrogate_key(['s.event_id']) }} as event_fk,
-    {{ dbt_utils.generate_surrogate_key(['s.map_id']) }} as map_fk,
+    {{ dbt_utils.generate_surrogate_key(['mnr.map_name']) }} as map_fk,
     {{ dbt_utils.generate_surrogate_key(['s.player_id']) }} as player_fk,
     {{ dbt_utils.generate_surrogate_key(['s.agent_id']) }} as agent_fk,
     {{ dbt_utils.generate_surrogate_key(['pr.team_name']) }} as team_fk,
@@ -52,23 +57,33 @@ select
     s.rating,
     s.fk as first_kills,
     s.fd as first_deaths,
+    
     case 
         when pr.team_name = win_team.team_name then 1 
         else 0 
     end as is_win,
+    
     1 as maps_played
 
 from stats s
+
 join matches m 
     on s.match_id = m.match_id 
     and s.event_id = m.event_id
+
 left join player_roster pr
     on s.player_id = pr.player_id 
     and s.event_id = pr.event_id
+
 left join map_results mr
     on s.match_id = mr.match_id 
     and s.map_id = mr.map_id 
     and s.event_id = mr.event_id
+
+left join map_name_resolver mnr
+    on s.map_id = mnr.map_id
+    and s.event_id = mnr.event_id
+    
 left join team_resolver win_team
     on mr.winner_team_id = win_team.team_id
     and mr.event_id = win_team.event_id

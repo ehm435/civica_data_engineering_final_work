@@ -7,7 +7,7 @@ select
     e.event_name,
     t.team_name,
     count(distinct f.match_fk) as matches_played,
-    sum(f.maps_played) as total_maps_played,
+    count(distinct f.match_fk || '-' || f.map_fk) as total_maps_played,
     round(avg(f.is_win) * 100, 2) as map_win_rate_percent,
     sum(f.kills) as team_total_kills,
     sum(f.deaths) as team_total_deaths,
