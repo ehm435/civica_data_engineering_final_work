@@ -515,7 +515,7 @@ models:
             combination_of_columns: ["event_id", "player_id"]
 
 
-  - name: base_detailed_match_bangkok_2025
+  - name: base_detailed_match_map_bangkok_2025
     description: "Clean base model for map_matches_bangkok. Adds a fixed event_id and minimal column cleaning."
     config:
       tags: ["base", "map_matches", "bangkok"]
@@ -553,7 +553,7 @@ models:
           arguments:
             combination_of_columns: ["event_id", "map_match_id"]
 
-  - name: base_detailed_match_paris_2025
+  - name: base_detailed_match_map_paris_2025
     description: "Clean base model for map_matches_paris. Adds a fixed event_id and minimal column cleaning."
     config:
       tags: ["base", "map_matches", "paris"]
@@ -591,7 +591,7 @@ models:
           arguments:
             combination_of_columns: ["event_id", "map_match_id"]
 
-  - name: base_detailed_match_toronto_2025
+  - name: base_detailed_match_map_toronto_2025
     description: "Clean base model for map_matches_toronto. Adds a fixed event_id and minimal column cleaning."
     config:
       tags: ["base", "map_matches", "toronto"]
