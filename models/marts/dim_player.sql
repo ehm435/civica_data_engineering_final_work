@@ -1,25 +1,23 @@
-{{ config(materialized='table') }}
+{{ config(
+    materialized='table',
+    tags=['gold', 'dimension', 'player']
+) }}
 
-with player_events as (
+with snapshot_data as (
+
     select 
-        p.player_id,
-        p.player_name,
-        e.start_date as event_date
-    from {{ ref('stg_event_player') }} p
-    join {{ ref('stg_event') }} e on p.event_id = e.event_id
-),
-
-ranked_players as (
-    select
         player_id,
         player_name,
-        row_number() over (partition by player_id order by event_date desc) as rn
-    from player_events
+        dbt_valid_from,
+        dbt_valid_to
+    from {{ ref('players_snapshot') }}
 )
 
 select
     {{ dbt_utils.generate_surrogate_key(['player_id']) }} as player_pk,
     player_id as player_source_id,
-    player_name
-from ranked_players
-where rn = 1
+    player_name,
+    dbt_valid_from as valid_from
+
+from snapshot_data
+where dbt_valid_to is null
