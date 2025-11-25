@@ -72,3 +72,7 @@ left join map_results mr
 left join team_resolver win_team
     on mr.winner_team_id = win_team.team_id
     and mr.event_id = win_team.event_id
+
+{% if is_incremental() %}
+QUALIFY row_number() over (partition by player_performance_sk order by date_fk desc) = 1
+{% endif %}
