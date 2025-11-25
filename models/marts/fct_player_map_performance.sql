@@ -31,7 +31,7 @@ select
     {{ dbt_utils.generate_surrogate_key(['s.event_id']) }} as event_fk,
     {{ dbt_utils.generate_surrogate_key(['s.map_id']) }} as map_fk,
     {{ dbt_utils.generate_surrogate_key(['s.player_id']) }} as player_fk,
-    {{ dbt_utils.generate_surrogate_key(['s.agent_id']) }} as agent_fk,
+    {{ dbt_utils.generate_surrogate_key(['cast(s.agent_id as integer)']) }} as agent_fk,
     d.team_fk as team_fk,
     m.match_pk as match_fk,
     cast(m.match_date as date) as date_fk,

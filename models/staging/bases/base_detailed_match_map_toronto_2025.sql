@@ -1,7 +1,7 @@
 {{ config(materialized='view') }}
 
 select
-    md5('masters_toronto_2025') as event_id,
+    'masters_toronto_2025' as event_id,
     cast(map_match_id as integer) as map_match_id,
     cast(match_id as integer) as match_id,
     cast(map_id as integer) as map_id,

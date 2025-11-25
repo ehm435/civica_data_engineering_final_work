@@ -4,7 +4,7 @@
 
 select
     match_id,
-    md5(event_id)    as event_id,
+    event_id    as event_id,
     cast(match_title as varchar)  as match_title,
     cast(match_date as date) as date,
     cast(stage as varchar) as stage,

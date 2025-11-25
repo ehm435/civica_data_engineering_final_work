@@ -1,7 +1,7 @@
 {{ config(materialized='view') }}
 
 select
-    md5('masters_bangkok_2025') as event_id,
+    'masters_bangkok_2025' as event_id,
     cast(player_id    as integer) as player_id,
     cast(agents_count as integer) as agents_count,
     cast(rounds       as integer) as rounds,

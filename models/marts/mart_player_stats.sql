@@ -13,8 +13,8 @@ select
     round(avg(f.first_kills), 2) as avg_fk_per_map
 
 from {{ ref('fct_player_map_performance') }} f
-join {{ ref('dim_player') }} p on f.player_fk = p.player_pk
-join {{ ref('dim_team') }} t on f.team_fk = t.team_pk
-join {{ ref('dim_event') }} e on f.event_fk = e.event_pk
+left join {{ ref('dim_player') }} p on f.player_fk = p.player_pk
+left join {{ ref('dim_team') }} t on f.team_fk = t.team_pk
+left join {{ ref('dim_event') }} e on f.event_fk = e.event_pk
 
 group by 1, 2, 3

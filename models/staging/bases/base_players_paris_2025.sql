@@ -1,7 +1,7 @@
 {{ config(materialized='view') }}
 
 select
-    md5('masters_paris_2025') as event_id,
+    'masters_paris_2025' as event_id,
     cast(player_id as integer) as player_id,
     cast(player_name as varchar) as player_name,
     cast(team_id as integer) as team_id,

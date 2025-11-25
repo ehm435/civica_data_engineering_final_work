@@ -17,7 +17,7 @@ select
     round(sum(f.kills) / nullif(sum(f.deaths), 0), 2) as kd_ratio
 
 from {{ ref('fct_player_map_performance') }} f
-join {{ ref('dim_agent') }} a on f.agent_fk = a.agent_pk
-join {{ ref('dim_event') }} e on f.event_fk = e.event_pk
+left join {{ ref('dim_agent') }} a on f.agent_fk = a.agent_pk
+left join {{ ref('dim_event') }} e on f.event_fk = e.event_pk
 
 group by 1, 2
