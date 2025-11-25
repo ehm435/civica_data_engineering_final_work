@@ -1,4 +1,4 @@
-{{ config(materialized='view') }}
+{{ config(materialized='table') }}
 
 select distinct
     {{ dbt_utils.generate_surrogate_key(['team_name']) }} as team_pk,

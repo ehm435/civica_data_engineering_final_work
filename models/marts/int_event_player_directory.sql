@@ -1,4 +1,4 @@
-{{ config(materialized='view') }}
+{{ config(materialized='table') }}
 
 with players as (
     select event_id, player_id, player_name, team_id
