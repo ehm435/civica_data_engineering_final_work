@@ -3,6 +3,7 @@ version: 2
 sources:
   - name: raw_data
     description: ""
+    database: VALORANT_PROYECT
     tables:
       - name: agent_stats_table_bangkok
         description: ""
