@@ -83,7 +83,7 @@ select
     maps_played,
     patch
 from with_ids
-
+ 
 {% if is_incremental() %}
   where match_date >= (select coalesce(max(match_date), '1900-01-01') from {{ this }})
 {% endif %}
