@@ -1,6 +1,8 @@
 {{ config(
-    materialized='table',
-    tags=['gold', 'fact', 'core']
+    materialized='incremental',
+    unique_key='player_performance_sk',
+    incremental_strategy='merge',
+    tags=['gold', 'fact', 'performance']
 ) }}
 
 with stats as (
@@ -10,6 +12,9 @@ with stats as (
 matches as (
     select match_pk, event_id, match_id, match_date
     from {{ ref('stg_match') }}
+    {% if is_incremental() %}
+    where match_date >= (select coalesce(max(date_fk), '1900-01-01') from {{ this }})
+    {% endif %}
 ),
 
 map_results as (
@@ -18,12 +23,16 @@ map_results as (
 ),
 
 team_resolver as (
-    select event_id, team_id, team_name
+    select event_id, team_id, team_name 
     from {{ ref('stg_event_team') }}
 ),
 
-directory as (
-    select * from {{ ref('int_event_player_directory') }}
+player_roster as (
+    select p.event_id, p.player_id, t.team_name
+    from {{ ref('stg_event_player') }} p
+    join {{ ref('stg_event_team') }} t 
+        on p.event_id = t.event_id 
+        and p.team_id = t.team_id
 )
 
 select
@@ -31,8 +40,8 @@ select
     {{ dbt_utils.generate_surrogate_key(['s.event_id']) }} as event_fk,
     {{ dbt_utils.generate_surrogate_key(['s.map_id']) }} as map_fk,
     {{ dbt_utils.generate_surrogate_key(['s.player_id']) }} as player_fk,
-    {{ dbt_utils.generate_surrogate_key(['cast(s.agent_id as integer)']) }} as agent_fk,
-    d.team_fk as team_fk,
+    {{ dbt_utils.generate_surrogate_key(['s.agent_id']) }} as agent_fk,
+    {{ dbt_utils.generate_surrogate_key(['pr.team_name']) }} as team_fk,
     m.match_pk as match_fk,
     cast(m.match_date as date) as date_fk,
     s.k as kills,
@@ -44,21 +53,18 @@ select
     s.fk as first_kills,
     s.fd as first_deaths,
     case 
-        when d.team_name = win_team.team_name then 1 
+        when pr.team_name = win_team.team_name then 1 
         else 0 
     end as is_win,
-    
     1 as maps_played
 
 from stats s
-
 join matches m 
     on s.match_id = m.match_id 
     and s.event_id = m.event_id
-
-left join directory d 
-    on s.player_id = d.global_player_id 
-    and s.event_id = d.event_id
+left join player_roster pr
+    on s.player_id = pr.player_id 
+    and s.event_id = pr.event_id
 left join map_results mr
     on s.match_id = mr.match_id 
     and s.map_id = mr.map_id 
