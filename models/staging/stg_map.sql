@@ -10,6 +10,7 @@ with unioned as (
 select
     {{ dbt_utils.generate_surrogate_key(['map_id']) }} as map_pk,
     map_id,
+    event_id,
     map_name,
     last_rework
 from unioned
