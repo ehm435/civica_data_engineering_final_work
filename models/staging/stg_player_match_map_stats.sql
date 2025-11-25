@@ -1,6 +1,7 @@
 {{ config(
     materialized='incremental',
-    incremental_strategy='append'
+    unique_key=['event_id', 'match_id', 'map_id', 'player_id'],
+    incremental_strategy='delete+insert'
 ) }}
 
 with unioned as (
@@ -9,6 +10,7 @@ with unioned as (
         match_id,
         map_id,
         player_id,
+        cast(agent_id as integer) as agent_id,
         rating,
         acs,
         k,
@@ -31,6 +33,7 @@ with unioned as (
         match_id,
         map_id,
         player_id,
+        cast(agent_id as integer) as agent_id,
         rating,
         acs,
         k,
@@ -53,6 +56,7 @@ with unioned as (
         match_id,
         map_id,
         player_id,
+        cast(agent_id as integer) as agent_id,
         rating,
         acs,
         k,
@@ -82,6 +86,7 @@ with_pk as (
         match_id,
         map_id,
         player_id,
+        cast(agent_id as integer) as agent_id,
         rating,
         acs,
         k,
@@ -103,6 +108,7 @@ select
     match_id,
     map_id,
     player_id,
+    cast(agent_id as integer) as agent_id,
     rating,
     acs,
     k,

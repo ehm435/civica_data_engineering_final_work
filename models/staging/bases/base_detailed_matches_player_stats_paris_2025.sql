@@ -1,10 +1,11 @@
 {{ config(materialized='view') }}
 
 select
-    md5('masters_paris_2025') as event_id,
+    'masters_paris_2025' as event_id,
     cast(match_id  as integer) as match_id,
     cast(player_id as integer) as player_id,
     cast(map_id    as integer) as map_id,
+    cast(agent_id    as integer) as agent_id,
     rating,
     acs,
     cast(k        as integer) as k,

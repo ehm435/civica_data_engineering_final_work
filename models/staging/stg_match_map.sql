@@ -1,6 +1,7 @@
 {{ config(
     materialized='incremental',
-    incremental_strategy='append'
+    unique_key=['event_id', 'match_id', 'map_id', 'map_order'],
+    incremental_strategy='delete+insert'
 ) }}
 
 with unioned as (

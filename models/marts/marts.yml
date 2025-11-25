@@ -1,0 +1,205 @@
+version: 2
+
+models:
+
+  - name: dim_event
+    description: "Conformed dimension containing tournament details (Masters, Champions, etc.)."
+    config:
+      tags: ["gold", "dimension", "event"]
+    columns:
+      - name: event_pk
+        description: "Primary Key (Surrogate Hash)."
+        tests:
+          - unique
+          - not_null
+      - name: event_name
+        description: "Official name of the tournament."
+
+  - name: dim_map
+    description: "Conformed dimension for Valorant maps."
+    config:
+      tags: ["gold", "dimension", "map"]
+    columns:
+      - name: map_pk
+        description: "Primary Key (Surrogate Hash)."
+        tests:
+          - unique
+          - not_null
+      - name: map_name
+        description: "Canonical map name."
+
+  - name: dim_agent
+    description: "Conformed dimension for playable agents."
+    config:
+      tags: ["gold", "dimension", "agent"]
+    columns:
+      - name: agent_pk
+        description: "Primary Key (Surrogate Hash)."
+        tests:
+          - unique
+          - not_null
+      - name: agent_name
+        description: "Agent name (e.g., Jett, Omen)."
+
+  - name: dim_team
+    description: >
+      Conformed dimension for Teams.
+      NOTE: PK generated based on normalized team names.
+    config:
+      tags: ["gold", "dimension", "team"]
+    columns:
+      - name: team_pk
+        description: "Primary Key (Surrogate Hash of Team Name)."
+        tests:
+          - unique
+          - not_null
+      - name: team_name
+        description: "Official team name."
+
+  - name: dim_player
+    description: >
+      Conformed dimension for Players.
+      NOTE: PK generated based on Global Player ID provided by source (optionally sourced via Snapshot).
+    config:
+      tags: ["gold", "dimension", "player"]
+    columns:
+      - name: player_pk
+        description: "Primary Key (Surrogate Hash of Global Player ID)."
+        tests:
+          - unique
+          - not_null
+      - name: player_source_id
+        description: "Original Global ID from raw data."
+      - name: player_name
+        description: "Most recent known nickname for the player."
+
+  - name: dim_match
+    description: "Dimension containing match context (Date, Stage, Format)."
+    config:
+      tags: ["gold", "dimension", "match"]
+    columns:
+      - name: match_pk
+        description: "Primary Key (Surrogate Hash)."
+        tests:
+          - unique
+          - not_null
+      - name: match_title
+      - name: match_date
+      - name: stage_name
+      - name: format_name
+
+  - name: dim_date
+    description: "Standard date dimension for temporal analysis."
+    config:
+      tags: ["gold", "dimension", "date"]
+    columns:
+      - name: date_pk
+        description: "Date key (YYYY-MM-DD)."
+        tests:
+          - unique
+          - not_null
+      - name: year
+      - name: month
+      - name: day_of_week_iso
+
+  - name: int_event_player_directory
+    description: >
+      Intermediate model that acts as a central directory to resolve Player identities 
+      and their Team affiliations per Event.
+    config:
+      tags: ["gold", "intermediate", "directory"]
+    columns:
+      - name: event_id
+        tests: [not_null]
+      - name: global_player_id
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ["event_id", "global_player_id"]
+
+  - name: fct_player_map_performance
+    description: >
+      Core Fact Table containing atomic performance data (1 row per Player per Map).
+      Materialized as Incremental Table to optimize storage and compute costs.
+    config:
+      tags: ["gold", "fact", "core"]
+    columns:
+      - name: player_performance_sk
+        description: "Surrogate Key (PK). Hash of (Event + Match + Map + Player)."
+        tests:
+          - unique
+          - not_null
+      - name: event_fk
+        tests:
+          - not_null
+          - relationships: {to: ref('dim_event'), field: event_pk}
+      - name: map_fk
+        tests:
+          - not_null
+          - relationships: {to: ref('dim_map'), field: map_pk}
+      - name: player_fk
+        tests:
+          - not_null
+          - relationships: {to: ref('dim_player'), field: player_pk}
+      - name: agent_fk
+        tests:
+          - not_null
+          - relationships: {to: ref('dim_agent'), field: agent_pk}
+      - name: team_fk
+        tests:
+          - not_null
+          - relationships: {to: ref('dim_team'), field: team_pk}
+      - name: match_fk
+        tests:
+          - not_null
+          - relationships: {to: ref('dim_match'), field: match_pk}
+      - name: date_fk
+        description: "Date key used for incremental loading logic."
+        tests:
+          - not_null
+          - relationships: {to: ref('dim_date'), field: date_pk}
+
+      - name: is_win
+        description: "1 if the player won the map, 0 otherwise."
+      - name: kills
+      - name: deaths
+      - name: assists
+      - name: acs
+      - name: kd_diff
+      - name: rating
+      - name: first_kills
+      - name: first_deaths
+      
+  - name: mart_team_stats
+    description: >
+      Data Mart aggregated by Team and Event.
+      Analyzes Team Firepower, Win Rates, and First Blood control.
+    config:
+      tags: ["platinum", "mart", "team_stats"]
+    columns:
+      - name: event_name
+      - name: team_name
+      - name: matches_played
+        description: "Total matches played by the team."
+      - name: map_win_rate_percent
+        description: "Percentage of maps won by the team."
+      - name: team_kd_ratio
+        description: "Kill/Death Ratio accumulated by all players in the team."
+      - name: first_blood_win_rate
+        description: "Percentage of opening duels won by the team (Critical metric for map control)."
+
+  - name: mart_player_stats
+    description: >
+      Data Mart aggregated by Player and Event.
+      Provides high-level insights on Player Performance (Total Kills, Overall K/D).
+    config:
+      tags: ["platinum", "mart", "player_stats"]
+    columns:
+      - name: player_name
+      - name: team_name
+      - name: event_name
+      - name: kd_ratio
+        description: "Kill/Death Ratio aggregated for the whole event."
+      - name: avg_acs
+      - name: total_kills
