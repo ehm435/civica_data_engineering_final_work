@@ -117,42 +117,42 @@ models:
         tests:
           - not_null
           - relationships:
-              arguments:  # <--- AQUÍ
+              arguments:
                 to: ref('dim_event')
                 field: event_pk
       - name: map_fk
         tests:
           - not_null
           - relationships:
-              arguments:  # <--- AQUÍ
+              arguments:
                 to: ref('dim_map')
                 field: map_pk
       - name: player_fk
         tests:
           - not_null
           - relationships:
-              arguments:  # <--- AQUÍ
+              arguments:
                 to: ref('dim_player')
                 field: player_pk
       - name: team_fk
         tests:
           - not_null
           - relationships:
-              arguments:  # <--- AQUÍ
+              arguments:
                 to: ref('dim_team')
                 field: team_pk
       - name: match_fk
         tests:
           - not_null
           - relationships:
-              arguments:  # <--- AQUÍ
+              arguments:
                 to: ref('dim_match')
                 field: match_pk
       - name: date_fk
         tests:
           - not_null
           - relationships:
-              arguments:  # <--- AQUÍ
+              arguments:
                 to: ref('dim_date')
                 field: date_pk
 
