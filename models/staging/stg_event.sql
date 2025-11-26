@@ -4,7 +4,7 @@ select
     {{ dbt_utils.generate_surrogate_key(['event_id']) }} as event_pk,
     event_id,
     event_id as event_code,
-    event_name,
+    coalesce(event_name, location) as event_name,
     url,
     title,
     subtitle,

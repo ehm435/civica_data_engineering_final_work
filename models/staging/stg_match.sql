@@ -1,7 +1,7 @@
 {{ config(
     materialized='incremental',
-    incremental_strategy='merge',
-    unique_key=['event_id', 'match_id']
+    unique_key=['event_id', 'match_id'],
+    incremental_strategy='merge'
 ) }}
 
 with unioned as (
@@ -9,13 +9,13 @@ with unioned as (
         event_id,
         match_id,
         match_title,
-        date as match_date,
+        cast(date as date) as match_date,
         stage,
         format,
-        team1 as team1_id,
-        team2 as team2_id,
-        score,
-        maps_played,
+        cast(team1 as integer) as team1_id,
+        cast(team2 as integer) as team2_id,
+        cast(score as varchar) as score,
+        cast(maps_played as integer) as maps_played,
         patch
     from {{ ref('base_matches_bangkok_2025') }}
 
@@ -25,13 +25,13 @@ with unioned as (
         event_id,
         match_id,
         match_title,
-        date as match_date,
+        cast(date as date) as match_date,
         stage,
         format,
-        team1 as team1_id,
-        team2 as team2_id,
-        score,
-        maps_played,
+        cast(team1 as integer) as team1_id,
+        cast(team2 as integer) as team2_id,
+        cast(score as varchar) as score,
+        cast(maps_played as integer) as maps_played,
         patch
     from {{ ref('base_matches_paris_2025') }}
 
@@ -41,13 +41,13 @@ with unioned as (
         event_id,
         match_id,
         match_title,
-        date as match_date,
+        cast(date as date) as match_date,
         stage,
         format,
-        team1 as team1_id,
-        team2 as team2_id,
-        score,
-        maps_played,
+        cast(team1 as integer) as team1_id,
+        cast(team2 as integer) as team2_id,
+        cast(score as varchar) as score,
+        cast(maps_played as integer) as maps_played,
         patch
     from {{ ref('base_matches_toronto_2025') }}
 ),
@@ -83,6 +83,10 @@ select
     maps_played,
     patch
 from with_ids
+
+{% if is_incremental() %}
+  where match_date >= (select coalesce(max(match_date), '1900-01-01') from {{ this }})
+{% endif %}
 
 
 {% if is_incremental() %}

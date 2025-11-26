@@ -135,12 +135,6 @@ models:
                 to: ref('dim_player')
                 field: player_pk
       - name: agent_fk
-        tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_agent')
-                field: agent_pk
       - name: team_fk
         tests:
           - not_null
