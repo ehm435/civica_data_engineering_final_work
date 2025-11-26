@@ -11,10 +11,11 @@
 }}
 
 with all_players as (
-    {{ union_events(
-    table_prefix='base_players', 
-    event_suffixes=['bangkok_2025', 'paris_2025', 'toronto_2025'] 
-) }}
+    select player_id, player_name, 'bangkok' as source from {{ ref('base_players_bangkok_2025') }}
+    union all
+    select player_id, player_name, 'paris'   as source from {{ ref('base_players_paris_2025') }}
+    union all
+    select player_id, player_name, 'toronto' as source from {{ ref('base_players_toronto_2025') }}
 ),
 
 ranked_players as (
