@@ -84,9 +84,7 @@ select
     patch
 from with_ids
 
-{% if is_incremental() %}
-  where match_date >= (select coalesce(max(match_date), '1900-01-01') from {{ this }})
-{% endif %}
+
 {% if is_incremental() %}
   QUALIFY row_number() over (partition by match_pk order by match_date desc) = 1
 {% endif %}
