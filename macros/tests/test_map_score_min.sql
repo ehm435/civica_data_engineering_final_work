@@ -17,7 +17,6 @@ where
    or right_score is null
    or NOT (
             (left_score >= 13 OR right_score >= 13)
-         OR (left_score = 12 AND right_score = 12)
         )
 
 {% endtest %}
