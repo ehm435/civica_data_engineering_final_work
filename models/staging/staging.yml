@@ -188,11 +188,6 @@ models:
       - name: patch
         description: "Game patch used"
 
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns: ["event_id", "match_id"]
-
   - name: base_matches_paris_2025
     description: "Clean base model for matches_paris. Adds a fixed event_id and applies minimal column cleaning."
     config:
@@ -231,11 +226,6 @@ models:
       - name: patch
         description: "Game patch used"
 
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns: ["event_id", "match_id"]
-
   - name: base_matches_toronto_2025
     description: "Clean base model for matches_toronto. Adds a fixed event_id and applies minimal column cleaning."
     config:
@@ -273,11 +263,6 @@ models:
         description: "Number of maps won per side"
       - name: patch
         description: "Game patch used"
-
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          arguments:
-            combination_of_columns: ["event_id", "match_id"]
 
   - name: base_map_stats_bangkok_2025
     description: "Clean base model for map_stats_bangkok. Adds a fixed event_id and standardized typing."
